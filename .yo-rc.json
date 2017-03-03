@@ -1,0 +1,15 @@
+{
+  "generator-bigdatr-startr": {
+    "promptValues": {
+      "name": "phraser",
+      "description": "A small natural language generator. Makes words reads goods.",
+      "version": "0.0.0",
+      "license": "MIT",
+      "private": false,
+      "author": "Damien Clarke",
+      "username": "dxinteractive",
+      "nameConstant": "PHRASER",
+      "example": true
+    }
+  }
+}
