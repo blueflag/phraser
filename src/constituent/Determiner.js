@@ -1,4 +1,5 @@
-import PhraserObject from './PhraserObject';
+import Constituent from './Constituent';
+import {CheckType} from '../decls/TypeErrors';
 import {
     List,
     Record
@@ -6,10 +7,14 @@ import {
 
 const DeterminerRecord = Record({
     determiner: ""
-    // TODO needs sense of pluralisation
 });
 
-class Determiner extends PhraserObject {
+class Determiner extends Constituent {
+
+    static isDeterminer(obj: any): boolean {
+        return typeof obj == "object" && obj instanceof Determiner;
+    }
+
     toList(): List {
         return this.data.determiner
             ? List.of(this.data.determiner)
@@ -17,9 +22,15 @@ class Determiner extends PhraserObject {
     }
 }
 
-const DeterminerFactory = (determiner: Determiner) => new Determiner(DeterminerRecord({determiner}));
+const DeterminerFactory = (determiner: string) => {
+    CheckType(determiner, ["string"]);
+    new Determiner(DeterminerRecord({determiner}));
+};
 
-export default DeterminerFactory;
+export {
+    Determiner,
+    DeterminerFactory
+};
 
 /*
 Definite article : the

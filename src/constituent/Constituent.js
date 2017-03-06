@@ -1,8 +1,13 @@
 import {Map} from 'immutable';
 
-class PhraserObject {
+class Constituent {
+
     constructor(data: Map<string, any>) {
         this.data = data;
+    }
+
+    static isConstituent(obj: any): boolean {
+        return typeof obj == "object" && obj instanceof Constituent;
     }
 
     toArray(): Array<any> {
@@ -14,4 +19,4 @@ class PhraserObject {
     }
 }
 
-export default PhraserObject;
+export default Constituent;
