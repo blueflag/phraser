@@ -1,5 +1,6 @@
 import Constituent from './Constituent';
-import {CheckType} from '../decls/TypeErrors';
+import {AdjectiveFactory} from './Adjective';
+import {DeterminerFactory} from './Determiner';
 import {Noun, NounFactory} from './Noun';
 
 // TODO - validate types on method args!
@@ -30,7 +31,7 @@ class NounPhrase extends Constituent {
 
     determiner(determiner: Determiner|string): NounPhrase {
         return new NounPhrase(
-            this.data.set('determiner', determiner)
+            this.data.set('determiner', DeterminerFactory(determiner))
         );
     }
 
@@ -39,7 +40,7 @@ class NounPhrase extends Constituent {
 
     adjective(adj: Adjective|string): NounPhrase {
         return new NounPhrase(
-            this.data.update('adjectives', adjs => adjs.push(adj))
+            this.data.update('adjectives', adjs => adjs.push(AdjectiveFactory(adj)))
         );
     }
 
@@ -72,12 +73,13 @@ class NounPhrase extends Constituent {
     }
 }
 
-const NounPhraseFactory = (noun: Noun|string) => {
-    if(typeof noun == "string") {
-        noun = NounFactory(noun);
+const NounPhraseFactory = (noun: NounPhrase|Noun|string): NounPhrase => {
+    if(NounPhrase.isNounPhrase(noun)) {
+        return noun;
     }
-    CheckType(noun, [Noun]);
-    return new NounPhrase(NounPhraseRecord({noun}));
+    return new NounPhrase(NounPhraseRecord({
+        noun: NounFactory(noun)
+    }));
 };
 
 export {

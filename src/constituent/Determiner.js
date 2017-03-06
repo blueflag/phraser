@@ -22,9 +22,12 @@ class Determiner extends Constituent {
     }
 }
 
-const DeterminerFactory = (determiner: string) => {
-    CheckType(determiner, ["string"]);
-    new Determiner(DeterminerRecord({determiner}));
+const DeterminerFactory = (determiner: Determiner|string): Determiner => {
+    CheckType(determiner, [Determiner, "string"]);
+    if(Determiner.isDeterminer(determiner)) {
+        return determiner;
+    }
+    return new Determiner(DeterminerRecord({determiner}));
 };
 
 export {

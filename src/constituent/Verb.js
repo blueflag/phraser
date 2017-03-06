@@ -21,8 +21,11 @@ class Verb extends Constituent {
     }
 }
 
-const VerbFactory = (verb: string): Verb => {
-    CheckType(verb, ["string"]);
+const VerbFactory = (verb: Verb|string): Verb => {
+    CheckType(verb, [Verb, "string"]);
+    if(verb instanceof Verb) {
+        return verb;
+    }
     return new Verb(VerbRecord({verb}));
 };
 

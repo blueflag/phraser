@@ -21,8 +21,11 @@ class Adjective extends Constituent {
     }
 }
 
-const AdjectiveFactory = (adjective: string): Adjective => {
-    CheckType(adjective, ["string"]);
+const AdjectiveFactory = (adjective: Adjective|string): Adjective => {
+    CheckType(adjective, [Adjective, "string"]);
+    if(Adjective.isAdjective(Adjective)) {
+        return adjective;
+    }
     return new Adjective(AdjectiveRecord({adjective}));
 };
 

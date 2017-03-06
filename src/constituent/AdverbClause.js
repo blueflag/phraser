@@ -1,11 +1,11 @@
 import Constituent from './Constituent';
 import {CheckType} from '../decls/TypeErrors';
 import {Adjective} from './Adjective';
-import {AdjectivePhrase, AdjectivePhraseFactory} from './AdjectivePhrase';
-import {Noun, NounFactory} from './Noun';
+import {AdjectivePhrase} from './AdjectivePhrase';
+import {Noun} from './Noun';
 import {NounPhrase, NounPhraseFactory} from './NounPhrase';
 import {SubordinatingConjunction, SubordinatingConjunctionFactory} from './SubordinatingConjunction';
-import {Verb, VerbFactory} from './Verb';
+import {Verb} from './Verb';
 import {VerbPhrase, VerbPhraseFactory} from './VerbPhrase';
 import {
     List,
@@ -30,7 +30,7 @@ class AdverbClause extends Constituent {
 
     modifier(modifier: PrepositionalPhrase|string): AdverbClause {
         return new AdverbClause(
-            this.data.update('modifiers', modifiers => modifiers.push(modifier))
+            this.data.update('modifiers', modifiers => modifiers.push(modifier)) // TODO cast this
         );
     }
 
@@ -50,46 +50,24 @@ class AdverbClause extends Constituent {
 }
 
 const AdverbClauseFactory = (
-    conjunction: SubordinatingConjunction|string,
+    conjunctionOrAdvClause: AdverbClause|SubordinatingConjunction|string,
     subject: ?NounPhrase|Noun|string,
     verb: ?VerbPhrase|Verb|string,
     object: ?NounPhrase|Noun|AdjectivePhrase|Adjective|string
 ): AdverbClause => {
 
-    if(typeof conjunction == "string") {
-        conjunction = SubordinatingConjunctionFactory(conjunction);
-    }
-    if(typeof subject == "string") {
-        subject = NounFactory(subject);
-    }
-    if(Noun.isNoun(subject)) {
-        subject = NounPhraseFactory(subject);
-    }
-    if(typeof verb == "string") {
-        verb = VerbFactory(verb);
-    }
-    if(Verb.isVerb(verb)) {
-        verb = VerbPhraseFactory(verb);
-    }
-    if(object) {
-        if(Noun.isNoun(object)) {
-            object = NounPhraseFactory(object);
-        }
-        if(Adjective.isAdjective(object)) {
-            object = AdjectivePhraseFactory(object);
-        }
+    if(AdverbClause.isAdverbClause(conjunctionOrAdvClause)) {
+        return conjunctionOrAdvClause;
     }
 
-    CheckType(conjunction, [SubordinatingConjunction]);
-    CheckType(subject, [NounPhrase, "null"]);
-    CheckType(verb, [VerbPhrase, "null"]);
-    CheckType(object, [NounPhrase, AdjectivePhrase, "undefined"]);
+    // enforce that the object to already has its final type
+    CheckType(object, [NounPhrase, AdjectivePhrase, "null", "undefined"]);
 
     return new AdverbClause(AdverbClauseRecord({
-        conjunction,
-        subject,
-        verb,
-        object
+        conjunction: SubordinatingConjunctionFactory(conjunctionOrAdvClause),
+        subject: subject && NounPhraseFactory(subject),
+        verb: verb && VerbPhraseFactory(verb),
+        object: object || null
     }));
 };
 

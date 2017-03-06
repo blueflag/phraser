@@ -28,7 +28,7 @@ class Clause extends Constituent {
 
     modifier(modifier: PrepositionalPhrase|string): Clause {
         return new Clause(
-            this.data.update('modifiers', modifiers => modifiers.push(modifier))
+            this.data.update('modifiers', modifiers => modifiers.push(modifier)) // TODO cast this
         );
     }
 
@@ -47,36 +47,23 @@ class Clause extends Constituent {
 }
 
 const ClauseFactory = (
-    subject: NounPhrase|Noun|string,
+    subjectOrClause: Clause|NounPhrase|Noun|string,
     verb: VerbPhrase|Verb|string,
     object: ?NounPhrase|Noun|AdjectivePhrase|Adjective|string
 ): Clause => {
 
-    if(typeof subject == "string") {
-        subject = NounFactory(subject);
-    }
-    if(Noun.isNoun(subject)) {
-        subject = NounPhraseFactory(subject);
-    }
-    if(typeof verb == "string") {
-        verb = VerbFactory(verb);
-    }
-    if(Verb.isVerb(verb)) {
-        verb = VerbPhraseFactory(verb);
-    }
-    if(object) {
-        if(Noun.isNoun(object)) {
-            object = NounPhraseFactory(object);
-        }
-        if(Adjective.isAdjective(object)) {
-            object = AdjectivePhraseFactory(object);
-        }
+    if(Clause.isClause(subjectOrClause)) {
+        return subjectOrClause;
     }
 
-    CheckType(subject, [NounPhrase]);
-    CheckType(verb, [VerbPhrase]);
-    CheckType(object, [NounPhrase, AdjectivePhrase, "undefined"]);
-    return new Clause(ClauseRecord({subject, verb, object}));
+    // enforce that the object to already has its final type
+    CheckType(object, [NounPhrase, AdjectivePhrase, "null", "undefined"]);
+
+    return new Clause(ClauseRecord({
+        subject: NounPhraseFactory(subjectOrClause),
+        verb: VerbPhraseFactory(verb),
+        object: object || null
+    }));
 };
 
 export {

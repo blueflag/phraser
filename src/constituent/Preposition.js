@@ -10,6 +10,11 @@ const PrepositionRecord = Record({
 });
 
 class Preposition extends Constituent {
+
+    static isPreposition(obj: any): boolean {
+        return typeof obj == "object" && obj instanceof Preposition;
+    }
+
     toList(): List {
         return this.data.preposition
             ? List.of(this.data.preposition)
@@ -17,8 +22,11 @@ class Preposition extends Constituent {
     }
 }
 
-const PrepositionFactory = (preposition: string): Preposition => {
-    CheckType(preposition, ["string"]);
+const PrepositionFactory = (preposition: Preposition|string): Preposition => {
+    CheckType(preposition, [Preposition, "string"]);
+    if(Preposition.isPreposition(preposition)) {
+        return preposition;
+    }
     return new Preposition(PrepositionRecord({preposition}));
 };
 

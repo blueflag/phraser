@@ -1,6 +1,5 @@
 import Constituent from './Constituent';
 import {Adjective, AdjectiveFactory} from './Adjective';
-import {CheckType} from '../decls/TypeErrors';
 import {
     List,
     Record
@@ -23,12 +22,13 @@ class AdjectivePhrase extends Constituent {
     }
 }
 
-const AdjectivePhraseFactory = (adjective: Adjective) => {
-    if(typeof adjective == "string") {
-        adjective = AdjectiveFactory(adjective);
+const AdjectivePhraseFactory = (adjective: AdjectivePhrase|Adjective|string): AdjectivePhrase => {
+    if(AdjectivePhrase.isAdjectivePhrase(adjective)) {
+        return adjective;
     }
-    CheckType(adjective, [Adjective]);
-    return new AdjectivePhrase(AdjectivePhraseRecord({adjective}));
+    return new AdjectivePhrase(AdjectivePhraseRecord({
+        adjective: AdjectiveFactory(adjective)
+    }));
 };
 
 export {

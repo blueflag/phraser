@@ -21,8 +21,11 @@ class SubordinatingConjunction extends Constituent {
     }
 }
 
-const SubordinatingConjunctionFactory = (conjunction: string): SubordinatingConjunction => {
-    CheckType(conjunction, ["string"]);
+const SubordinatingConjunctionFactory = (conjunction: SubordinatingConjunction|string): SubordinatingConjunction => {
+    CheckType(conjunction, [SubordinatingConjunction, "string"]);
+    if(SubordinatingConjunction.isSubordinatingConjunction(conjunction)) {
+        return conjunction;
+    }
     return new SubordinatingConjunction(SubordinatingConjunctionRecord({conjunction}));
 };
 

@@ -13,6 +13,11 @@ const PrepositionPhraseRecord = Record({
 });
 
 class PrepositionPhrase extends Constituent {
+
+    static isPrepositionPhrase(obj: any): boolean {
+        return typeof obj == "object" && obj instanceof PrepositionPhrase;
+    }
+
     toList(): List {
         return List()
             .concat(this.data.preposition)
@@ -21,28 +26,24 @@ class PrepositionPhrase extends Constituent {
 }
 
 const PrepositionPhraseFactory = (
-    preposition: Preposition|string,
+    prepositionOrPhrase: PrepositionPhrase|Preposition|string,
     object: NounPhrase|string
 ): PrepositionPhrase => {
 
-    // TODO: move these inside PrepositionPhraseRecord and always call it on all args
-    if(typeof preposition == "string") {
-        preposition = PrepositionFactory(preposition);
-    }
-    if(typeof object == "string") {
-        object = NounPhraseFactory(object);
+    if(PrepositionPhrase.isPrepositionPhrase(prepositionOrPhrase)) {
+        return prepositionOrPhrase;
     }
 
-    CheckType(preposition, [Preposition]);
+    CheckType(prepositionOrPhrase, [Preposition]);
     CheckType(object, [NounPhrase]);
 
     return new PrepositionPhrase(PrepositionPhraseRecord({
-        preposition,
-        object
+        preposition: PrepositionFactory(prepositionOrPhrase),
+        object: NounPhraseFactory(object)
     }));
 };
 
 export {
     PrepositionPhrase,
     PrepositionPhraseFactory
-}
+};

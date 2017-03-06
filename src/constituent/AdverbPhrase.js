@@ -1,6 +1,5 @@
 import Constituent from './Constituent';
 import {Adverb, AdverbFactory} from './Adverb';
-import {CheckType} from '../decls/TypeErrors';
 import {
     List,
     Record
@@ -23,12 +22,13 @@ class AdverbPhrase extends Constituent {
     }
 }
 
-const AdverbPhraseFactory = (adverb: Adverb) => {
-    if(typeof adverb == "string") {
-        adverb = AdverbFactory(adverb);
+const AdverbPhraseFactory = (adverb: AdverbPhrase|Adverb|string): AdverbPhrase => {
+    if(AdverbPhrase.isAdverbPhrase(adverb)) {
+        return adverb;
     }
-    CheckType(adverb, [Adverb]);
-    return new AdverbPhrase(AdverbPhraseRecord({adverb}));
+    return new AdverbPhrase(AdverbPhraseRecord({
+        adverb: AdverbFactory(adverb)
+    }));
 };
 
 export {

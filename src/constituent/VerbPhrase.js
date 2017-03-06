@@ -1,6 +1,6 @@
 import Constituent from './Constituent';
-import {CheckType} from '../decls/TypeErrors';
 import {Verb, VerbFactory} from './Verb';
+import {AdverbFactory} from './Adverb';
 
 import {
     List,
@@ -22,9 +22,9 @@ class VerbPhrase extends Constituent {
     // jumped "swiftly"
     // TODO adverbs have positions
 
-    adverb(adj: Adverb|string): VerbPhrase {
+    adverb(adv: Adverb|string): VerbPhrase {
         return new VerbPhrase(
-            this.data.update('adverbs', adjs => adjs.push(adj))
+            this.data.update('adverbs', advs => advs.push(AdverbFactory(adv)))
         );
     }
 
@@ -36,12 +36,13 @@ class VerbPhrase extends Constituent {
     }
 }
 
-const VerbPhraseFactory = (verb: Verb|string) => {
-    if(typeof verb == "string") {
-        verb = VerbFactory(verb);
+const VerbPhraseFactory = (verb: VerbPhrase|Verb|string): VerbPhrase => {
+    if(VerbPhrase.isVerbPhrase(verb)) {
+        return verb;
     }
-    CheckType(verb, [Verb]);
-    return new VerbPhrase(VerbPhraseRecord({verb}));
+    return new VerbPhrase(VerbPhraseRecord({
+        verb: VerbFactory(verb)
+    }));
 };
 
 export {
