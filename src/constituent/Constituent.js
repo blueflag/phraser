@@ -1,4 +1,5 @@
 import {Map, List} from 'immutable';
+import {WordMeta} from './WordMeta';
 
 class Constituent {
 
@@ -31,6 +32,7 @@ class Constituent {
     render(): List {
         return this.flatten()
             .map(ii => ii._renderSelf());
+            //.map(ii => WordMeta.isWordMeta(ii) ? ii.render() : ii);
     }
 
     renderString(): string {

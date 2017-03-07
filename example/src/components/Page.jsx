@@ -14,7 +14,8 @@ const {
     Sentence,
     SubordinatingConjunction,
     Verb,
-    VerbPhrase
+    VerbPhrase,
+    WordMeta
 } = Phraser(Lexicon);
 
 // const nouns = [
@@ -61,7 +62,7 @@ export default (props) => {
                 .determiner("all")
                 .modifier(PrepositionPhrase(
                     Preposition("in"),
-                    NounPhrase(Noun("Victoria"))
+                    NounPhrase(Noun(WordMeta("Victoria", {color: "green"})))
                 )
             )
         );
@@ -77,7 +78,7 @@ export default (props) => {
                     NounPhrase(Noun("supply and demand metrics"))
                 ))
                 .modifier(filter)
-        ).renderString();
+        ).render();
 
         return sentence;
     });

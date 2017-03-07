@@ -1,5 +1,6 @@
 import Constituent from './Constituent';
 import {CheckType} from '../decls/TypeErrors';
+import {WordMeta} from './WordMeta';
 import {
     List,
     Record
@@ -38,8 +39,8 @@ class Noun extends Constituent {
 
 }
 
-const NounFactory = (noun: Noun|string): Noun => {
-    CheckType(noun, [Noun, "string"]);
+const NounFactory = (noun: Noun|WordMeta|string): Noun => {
+    CheckType(noun, [Noun, WordMeta, "string"]);
     if(Noun.isNoun(noun)) {
         return noun;
     }

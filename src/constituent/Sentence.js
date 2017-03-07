@@ -1,5 +1,6 @@
 import Constituent from './Constituent';
 import {CheckType} from '../decls/TypeErrors';
+import {firstToUpper, withFullStop} from '../utils/String';
 import {
     List,
     Record
@@ -19,10 +20,13 @@ class Sentence extends Constituent {
         return this._flattenChildren([
             this.data.sentence
         ]);
-        // TODO - mark first item as beginning of sentence
-        // and mark last item as needing a full stop
-
     }
+
+    render(): List {
+        return super.render()
+            .update(0, firstToUpper);
+    }
+
 }
 
 const SentenceFactory = (...sentence: Consitutent|string): Sentence => {

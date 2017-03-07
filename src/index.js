@@ -13,6 +13,7 @@ import {PrepositionPhraseFactory} from './constituent/PrepositionPhrase';
 import {SubordinatingConjunctionFactory} from './constituent/SubordinatingConjunction';
 import {VerbFactory} from './constituent/Verb';
 import {VerbPhraseFactory} from './constituent/VerbPhrase';
+import {WordMetaFactory} from './constituent/WordMeta';
 
 
 function Phraser(lexicon: Object) {
@@ -32,6 +33,7 @@ function Phraser(lexicon: Object) {
         SubordinatingConjunction: SubordinatingConjunctionFactory,
         Verb: VerbFactory,
         VerbPhrase: VerbPhraseFactory,
+        WordMeta: WordMetaFactory,
 
         // short hand
         A: AdjectiveFactory,
