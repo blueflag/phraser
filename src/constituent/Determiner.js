@@ -7,7 +7,8 @@ import {
 } from 'immutable';
 
 const DeterminerRecord = Record({
-    determiner: ""
+    determiner: "",
+    quantity: null
 });
 
 class Determiner extends Constituent {
@@ -16,8 +17,18 @@ class Determiner extends Constituent {
         return typeof obj == "object" && obj instanceof Determiner;
     }
 
-    _renderSelf(): string {
-        return this.data.determiner;
+    _renderSelf(): List {
+        return List()
+            .push(this.data.determiner)
+            .push(this.data.quantity)
+            .filter(ii => ii != null);
+    }
+
+    quantity(quantity: number): Determiner {
+        CheckType(quantity, ["number"]);
+        return new Determiner(
+            this.data.set('quantity', quantity)
+        );
     }
 }
 

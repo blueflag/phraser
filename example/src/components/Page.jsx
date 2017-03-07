@@ -15,7 +15,12 @@ const {
     SubordinatingConjunction,
     Verb,
     VerbPhrase,
-    WordMeta
+    WordMeta,
+    AP,
+    Det,
+    NP,
+    PP,
+    VP
 } = Phraser(Lexicon);
 
 // const nouns = [
@@ -29,30 +34,8 @@ const {
 export default (props) => {
     var sentences = [];
 
-    /*sentences.push('<h4>Nouns</h4>');
-    sentences.push('<p><em>"Cat", "Cats", "Richmond"</em></p>');
-
-    sentences.push(() => {
-        return Noun("Cat")
-            .toString();
-    });
-
-    sentences.push(() => {
-        return Noun("Cat")
-            .plural()
-            .toString();
-    });
-
-    sentences.push(() => {
-        return Noun("Richmond")
-            .toString();
-    });*/
-
-
-
-    sentences.push('<h4>Clauses</h4>');
-    sentences.push('<p><em>"Richmond ranks 4th for supply and demand metrics when comparing all suburbs in Victoria."</em></p>');
-
+    sentences.push('<h4>Suburb Ranking</h4>');
+    sentences.push('<p>e.g. <em>"Richmond ranks 4th for supply and demand metrics when comparing all suburbs in Victoria."</em></p>');
     sentences.push(() => {
         const filter = AdverbClause(
             SubordinatingConjunction("when"),
@@ -62,8 +45,8 @@ export default (props) => {
                 .determiner("all")
                 .modifier(PrepositionPhrase(
                     Preposition("in"),
-                    NounPhrase(Noun(WordMeta("Victoria", {color: "green"})))
-                )
+                    NounPhrase(Noun(WordMeta("Victoria", {color: "green"})) // EXAMPLE passing objects through as a word to facilitate word meta data and rich rendering on front end
+                ))
             )
         );
 
@@ -75,7 +58,7 @@ export default (props) => {
             )
                 .modifier(PrepositionPhrase(
                     Preposition("for"),
-                    NounPhrase(Noun("supply and demand metrics"))
+                    NounPhrase(Noun("supply and demand metrics")) // TODO noun adjuncts to describe SUPPLY AND DEMAND metrics
                 ))
                 .modifier(filter)
         ).renderString();
@@ -83,154 +66,55 @@ export default (props) => {
         return sentence;
     });
 
-
-
-    /*
-
-    sentences.push("Nouns and determiners");
-
+    sentences.push('<p>...the same thing written shorthand...</p>');
     sentences.push(() => {
-        return Noun("cat")
-            .toString();
+        const comparisonNoun = NP("suburbs")
+            .det("all")
+            .modifier(PP("in", "Victoria"));
+
+        const sentence = Sentence(
+            Clause(
+                "Richmond",
+                "ranks", // TODO verb tenses so this can just be "rank"
+                AP("4th") // TODO some kind of helper class that can use numeral and turn numbers to ordered numbers
+            )
+                .modifier(PP("for", "supply and demand metrics"))
+                .modifier(AdverbClause("when", null, "comparing", comparisonNoun))
+        ).renderString();
+
+        return sentence;
     });
 
+    sentences.push('<h4>Supply Trends</h4>');
+    sentences.push('<p>e.g. <em>"Hawthorn\'s supply has been trending slightly upward looking at the last 6 months."</em></p>');
     sentences.push(() => {
-        return Noun("cat")
-            .determiner(Determiner("the"))
-            .toString();
+        const sentence = Sentence(
+            Clause(
+                NP("supply").det("Hawthorn's"), // TODO separate type or method for possessive determiners
+                VP("trending").adverb("slightly upward") // TODO add verb dictionary and "has been"
+                // ^ TODO add degree as a type for "very" etc.
+            )
+                .modifier(PP("looking at", NP("month").det(Det("the last").quantity(6))))
+        ).renderString();
+
+        return sentence;
     });
 
+    sentences.push('<p>e.g. <em>"The average number of listings is 22 which is 12% higher than the state average."</em></p>');
     sentences.push(() => {
-        return Noun("cat")
-            .determiner(Determiner("a"))
-            .toString();
+        const sentence = Sentence(
+            Clause(
+                NP("average number").the().modifier(PP("of", "listings")),
+                VP("is")
+                // ^ TODO add degree as a type for "very" etc.
+            )
+                .modifier(PP("looking at", NP("month").det(Det("the last").quantity(6))))
+        ).renderString();
+
+        return sentence;
     });
 
-    sentences.push(() => {
-        return Noun("egg")
-            .determiner(Determiner("a"))
-            .toString();
-    });
 
-    sentences.push("Singular and plural nouns");
-
-    sentences.push(() => {
-        return Noun("cat")
-            .determiner(Determiner("the"))
-            .plural()
-            .toString();
-    });
-
-    sentences.push(() => {
-        return Noun("cat")
-            .determiner(Determiner("the"))
-            .plural()
-            .single()
-            .toString();
-    });
-
-    sentences.push(() => {
-        return Noun("cat")
-            .amount(1)
-            .toString();
-    });
-
-    sentences.push(() => {
-        return Noun("cat")
-            .amount(5)
-            .toString();
-    });
-
-    sentences.push(() => {
-        return Noun("cat")
-            .amount(0.2)
-            .toString();
-    });
-
-    sentences.push("Adjectives");
-
-    sentences.push(() => {
-        return Noun("cat")
-            .determiner(Determiner("the"))
-            .adjective(Adjective("fat"))
-            .toString();
-    });
-
-    sentences.push(() => {
-        return Noun("cat")
-            .determiner(Determiner("the"))
-            .adjective(Adjective("fat"))
-            .adjective(Adjective("blue"))
-            .toString();
-
-        // TODO commas! ordering!
-    });
-
-    sentences.push(() => {
-        return Noun("Limpopo river")
-            .determiner(Determiner("the"))
-            .adjective(Adjective("great"))
-            .adjective(Adjective("grey"))
-            .adjective(Adjective("green"))
-            .adjective(Adjective("greasy"))
-            .toString();
-
-        // TODO ordering!
-    });
-
-    sentences.push("Clauses and predicates");
-
-    sentences.push(() => {
-        return Clause(Noun("mr. cat"), Predicate(Verb("sits")))
-            .toString();
-    });
-
-    sentences.push(() => {
-        return Clause(Noun("cat"), Predicate(Verb("is"), Adjective("fat")))
-            .toString();
-    });
-
-    sentences.push("Prepositional phrases");
-
-    sentences.push(() => {
-        var subject = Noun("cat")
-            .determiner(Determiner("the"))
-            .prepositionalPhrase(PrepositionPhrase(Preposition("on"), Noun("mat").determiner("the")))
-
-        return Clause(subject, Predicate(Verb("ate"), Noun("rocks")))
-            .toString();
-    });
-
-    sentences.push(() => {
-        var subject = Noun("cat")
-            .determiner(Determiner("the"));
-
-        return Clause(subject, Predicate(Verb("ate"), Noun("rocks")))
-            .prepositionalPhrase(PrepositionPhrase(Preposition("on"), Noun("mat").determiner("the")))
-            .toString();
-    });
-
-    sentences.push(() => {
-        var subject = Noun("cat")
-            .determiner(Determiner("the"));
-
-        var object = Noun("snails")
-            .prepositionalPhrase(PrepositionPhrase(Preposition("from"), Noun("France")))
-
-        return Clause(subject, Predicate(Verb("ate"), object))
-            .toString();
-    });
-
-    sentences.push(() => {
-        var subject = Noun("cat")
-            .determiner(Determiner("the"));
-
-        return Clause(subject, Predicate(Verb("ate"), Noun("rocks")))
-            .prepositionalPhrase(PrepositionPhrase(Preposition("on"), Noun("mat").determiner("the")))
-            .prepositionalPhrase(PrepositionPhrase(Preposition("with"), Noun("Mum")))
-            .prepositionalPhrase(PrepositionPhrase(Preposition("under"), Noun("supervision").determiner("my")))
-            .toString();
-    });*/
 
 
 
@@ -244,7 +128,7 @@ export default (props) => {
         <h1>Phraser</h1>
         <p>Hello. This is not an autogenerated sentence. But perhaps someday it will be.</p>
         {sentences.map((ii, kk) => typeof ii == "function"
-            ? <p key={kk}>{ii()}</p>
+            ? <h3 style={{margin: '0 0 5rem'}} key={kk}>{ii()}</h3>
             : <span key={kk} dangerouslySetInnerHTML={{__html: ii}} />
         )}
     </div>;

@@ -15,9 +15,26 @@ class Constituent {
             .flatten(true)
             .filter(ii => ii)
             .reduce((list: List<Constituent|string|null>, item: Constituent|string|null): List<Constituent|string> => {
-                return list.concat(item.flatten());
+                const flattened: List = typeof item == "object" && item.flatten
+                    ? item.flatten()
+                    : List([item]);
+
+                return list.concat(flattened);
             }, List())
             .filter(ii => ii);
+    }
+
+    _flattenAndRenderSelf(): List {
+        return this.flatten()
+            .reduce((list: List<string>, item: List<string>|string): List<string> => {
+                if(typeof item == "string") {
+                    return list.push(item);
+                }
+                const rendered: List<string>|string = item._renderSelf();
+                return List.isList(rendered)
+                    ? list.concat(rendered)
+                    : list.push(rendered);
+            }, List());
     }
 
     _renderSelf(): string {
@@ -29,8 +46,7 @@ class Constituent {
     }
 
     render(): List {
-        return this.flatten()
-            .map(ii => ii._renderSelf())
+        return this._flattenAndRenderSelf()
             .map(ii => typeof ii == "object" && ii._postRenderSelf
                 ? ii._postRenderSelf()
                 : ii
@@ -38,19 +54,13 @@ class Constituent {
     }
 
     renderString(): string {
-        return this.flatten()
-            .map(ii => ii._renderSelf())
+        return this._flattenAndRenderSelf()
             .map(ii => typeof ii == "object" && ii._stringRenderSelf
                 ? ii._stringRenderSelf()
                 : ii
             )
             .join(" ");
     }
-
-    data(): Record {
-        return this.data;
-    }
-
 }
 
 export default Constituent;

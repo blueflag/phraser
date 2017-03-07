@@ -18,9 +18,7 @@ class Noun extends Constituent {
     }
 
     _renderSelf(): string {
-        const isPlural = this.data.plural;
-
-        return isPlural
+        return this.data.plural
             ? this.data.noun + "s" // TODO make this work from a dictionary
             : this.data.noun;
     }
