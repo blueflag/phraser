@@ -28,11 +28,11 @@ class VerbPhrase extends Constituent {
         );
     }
 
-    toList(): List {
-        return List()
-            .concat(this.data.adverbs)
-            .concat(this.data.verb)
-            .filter(ii => ii);
+    flatten(): List {
+        return this._flattenChildren([
+            this.data.adverbs,
+            this.data.verb
+        ]);
     }
 }
 

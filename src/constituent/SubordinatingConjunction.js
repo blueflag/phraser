@@ -15,10 +15,10 @@ class SubordinatingConjunction extends Constituent {
         return typeof obj == "object" && obj instanceof SubordinatingConjunction;
     }
 
-    toList(): List {
-        return List()
-            .push(this.data.conjunction);
+    _renderSelf(): string {
+        return this.data.conjunction;
     }
+
 }
 
 const SubordinatingConjunctionFactory = (conjunction: SubordinatingConjunction|string): SubordinatingConjunction => {

@@ -15,11 +15,10 @@ class Preposition extends Constituent {
         return typeof obj == "object" && obj instanceof Preposition;
     }
 
-    toList(): List {
-        return this.data.preposition
-            ? List.of(this.data.preposition)
-            : List();
+    _renderSelf(): string {
+        return this.data.preposition;
     }
+
 }
 
 const PrepositionFactory = (preposition: Preposition|string): Preposition => {

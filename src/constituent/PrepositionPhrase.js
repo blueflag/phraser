@@ -18,10 +18,11 @@ class PrepositionPhrase extends Constituent {
         return typeof obj == "object" && obj instanceof PrepositionPhrase;
     }
 
-    toList(): List {
-        return List()
-            .concat(this.data.preposition)
-            .concat(this.data.object);
+    flatten(): List {
+        return this._flattenChildren([
+            this.data.preposition,
+            this.data.object
+        ]);
     }
 }
 

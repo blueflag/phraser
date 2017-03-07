@@ -15,15 +15,14 @@ class Adjective extends Constituent {
         return typeof obj == "object" && obj instanceof Adjective;
     }
 
-    toList(): List {
-        return List()
-            .push(this.data.adjective);
+    _renderSelf(): string {
+        return this.data.adjective;
     }
 }
 
 const AdjectiveFactory = (adjective: Adjective|string): Adjective => {
     CheckType(adjective, [Adjective, "string"]);
-    if(Adjective.isAdjective(Adjective)) {
+    if(Adjective.isAdjective(adjective)) {
         return adjective;
     }
     return new Adjective(AdjectiveRecord({adjective}));

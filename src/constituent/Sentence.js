@@ -15,18 +15,21 @@ class Sentence extends Constituent {
         return typeof obj == "object" && obj instanceof Sentence;
     }
 
-    toList(): List {
-        return List()
-            .concat(this.data.sentence);
-            // TODO - mark first item as beginning of sentence
-            // and mark last item as needing a full stop
+    flatten(): List {
+        return this._flattenChildren([
+            this.data.sentence
+        ]);
+        // TODO - mark first item as beginning of sentence
+        // and mark last item as needing a full stop
 
     }
 }
 
 const SentenceFactory = (...sentence: Consitutent|string): Sentence => {
     //sentence.forEach(ii => CheckType(ii, [Consitutent, "string"]));
-    return new Sentence(SentenceRecord({sentence}));
+    return new Sentence(SentenceRecord({
+        sentence: List(sentence)
+    }));
 };
 
 export {

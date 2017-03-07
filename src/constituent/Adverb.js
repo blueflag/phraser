@@ -15,9 +15,8 @@ class Adverb extends Constituent {
         return typeof obj == "object" && obj instanceof Adverb;
     }
 
-    toList(): List {
-        return List()
-            .push(this.data.adverb);
+    _renderSelf(): string {
+        return this.data.adverb;
     }
 }
 

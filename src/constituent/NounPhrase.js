@@ -62,14 +62,13 @@ class NounPhrase extends Constituent {
 
     //TODO: complements(), such as "the student OF PHYSICS". Complements can't be placed after modifiers (adjuncts)
 
-    toList(): List {
-        return List()
-            .concat(this.data.determiner)
-            .concat(this.data.adjectives)
-            .concat(this.data.noun)
-            .concat(this.data.modifiers)
-            .filter(ii => ii);
-
+    flatten(): List {
+        return this._flattenChildren([
+            this.data.determiner,
+            this.data.adjectives,
+            this.data.noun,
+            this.data.modifiers
+        ]);
     }
 }
 

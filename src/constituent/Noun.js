@@ -16,6 +16,14 @@ class Noun extends Constituent {
         return typeof obj == "object" && obj instanceof Noun;
     }
 
+    _renderSelf(): string {
+        const isPlural = this.data.plural;
+
+        return isPlural
+            ? this.data.noun + "s" // TODO make this work from a dictionary
+            : this.data.noun;
+    }
+
     plural(): Noun {
         return new Noun(this.data.set('plural', true));
     }
@@ -28,17 +36,6 @@ class Noun extends Constituent {
         return this.singular();
     }
 
-    toList(): List {
-        const isPlural = this.data.plural;
-
-        const pluralisedNoun = isPlural
-            ? this.data.noun + "s" // TODO make this work from a dictionary
-            : this.data.noun;
-
-        // TODO enable prepositional phrase flipping
-        return List()
-            .push(pluralisedNoun);
-    }
 }
 
 const NounFactory = (noun: Noun|string): Noun => {

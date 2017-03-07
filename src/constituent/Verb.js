@@ -15,10 +15,10 @@ class Verb extends Constituent {
         return typeof obj == "object" && obj instanceof Verb;
     }
 
-    toList(): List {
-        return List()
-            .push(this.data.verb);
+    _renderSelf(): string {
+        return this.data.verb;
     }
+
 }
 
 const VerbFactory = (verb: Verb|string): Verb => {

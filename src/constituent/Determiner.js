@@ -15,10 +15,8 @@ class Determiner extends Constituent {
         return typeof obj == "object" && obj instanceof Determiner;
     }
 
-    toList(): List {
-        return this.data.determiner
-            ? List.of(this.data.determiner)
-            : List();
+    _renderSelf(): string {
+        return this.data.determiner;
     }
 }
 

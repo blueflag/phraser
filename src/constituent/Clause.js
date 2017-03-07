@@ -32,17 +32,13 @@ class Clause extends Constituent {
         );
     }
 
-    toList(): List {
-        const object = typeof this.data.object == "string"
-            ? List(this.data.object)
-            : this.data.object;
-
-        return List()
-            .concat(this.data.subject || List())
-            .concat(this.data.verb || List())
-            .concat(object)
-            .concat(this.data.modifiers)
-            .filter(ii => ii);
+    flatten(): List {
+        return this._flattenChildren([
+            this.data.subject,
+            this.data.verb,
+            this.data.object,
+            this.data.modifiers
+        ]);
     }
 }
 

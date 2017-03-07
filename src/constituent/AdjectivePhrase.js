@@ -15,10 +15,10 @@ class AdjectivePhrase extends Constituent {
         return typeof obj == "object" && obj instanceof AdjectivePhrase;
     }
 
-    toList(): List {
-        return List()
-            .concat(this.data.adjective)
-            .filter(ii => ii);
+    flatten(): List {
+        return this._flattenChildren([
+            this.data.adjective
+        ]);
     }
 }
 

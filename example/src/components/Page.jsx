@@ -66,7 +66,7 @@ export default (props) => {
             )
         );
 
-        return Sentence(
+        const sentence = Sentence(
             Clause(
                 NounPhrase(Noun("Richmond")),
                 VerbPhrase(Verb("ranks")), // TODO verb tenses so this can just be "rank"
@@ -77,9 +77,12 @@ export default (props) => {
                     NounPhrase(Noun("supply and demand metrics"))
                 ))
                 .modifier(filter)
-            )
-            .toString();
+        ).renderString();
+
+        return sentence;
     });
+
+
 
     /*
 
@@ -230,7 +233,11 @@ export default (props) => {
 
 
 
-    sentences.forEach(ii => console.log(typeof ii == "function" ? "" + ii() : ii));
+    sentences.forEach(ii => {
+        if(typeof ii == "function") {
+            console.log(ii());
+        }
+    });
 
     return <div>
         <h1>Phraser</h1>

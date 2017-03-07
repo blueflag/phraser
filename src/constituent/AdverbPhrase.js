@@ -15,10 +15,10 @@ class AdverbPhrase extends Constituent {
         return typeof obj == "object" && obj instanceof AdverbPhrase;
     }
 
-    toList(): List {
-        return List()
-            .concat(this.data.adverb)
-            .filter(ii => ii);
+    flatten(): List {
+        return this._flattenChildren([
+            this.data.adverb
+        ]);
     }
 }
 
