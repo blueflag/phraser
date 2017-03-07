@@ -1,7 +1,7 @@
 import Constituent from './Constituent';
-import {CheckType} from '../decls/TypeErrors';
 import {Preposition, PrepositionFactory} from './Preposition';
 import {NounPhrase, NounPhraseFactory} from './NounPhrase';
+import {WordMeta} from './WordMeta';
 import {
     List,
     Record
@@ -27,16 +27,13 @@ class PrepositionPhrase extends Constituent {
 }
 
 const PrepositionPhraseFactory = (
-    prepositionOrPhrase: PrepositionPhrase|Preposition|string,
-    object: NounPhrase|string
+    prepositionOrPhrase: PrepositionPhrase|Preposition|WordMeta|string,
+    object: NounPhrase|Noun|WordMeta|string
 ): PrepositionPhrase => {
 
     if(PrepositionPhrase.isPrepositionPhrase(prepositionOrPhrase)) {
         return prepositionOrPhrase;
     }
-
-    CheckType(prepositionOrPhrase, [Preposition]);
-    CheckType(object, [NounPhrase]);
 
     return new PrepositionPhrase(PrepositionPhraseRecord({
         preposition: PrepositionFactory(prepositionOrPhrase),

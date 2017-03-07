@@ -1,5 +1,6 @@
 import Constituent from './Constituent';
 import {CheckType} from '../decls/TypeErrors';
+import {WordMeta} from './WordMeta';
 import {
     List,
     Record
@@ -20,8 +21,8 @@ class Adverb extends Constituent {
     }
 }
 
-const AdverbFactory = (adverb: Adverb|string): Adverb => {
-    CheckType(adverb, [Adverb, "string"]);
+const AdverbFactory = (adverb: Adverb|WordMeta|string): Adverb => {
+    CheckType(adverb, [Adverb, WordMeta, "string"]);
     if(Adverb.isAdverb(adverb)) {
         return adverb;
     }

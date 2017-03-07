@@ -1,5 +1,6 @@
 import Constituent from './Constituent';
 import {CheckType} from '../decls/TypeErrors';
+import {WordMeta} from './WordMeta';
 import {
     List,
     Record
@@ -21,8 +22,8 @@ class SubordinatingConjunction extends Constituent {
 
 }
 
-const SubordinatingConjunctionFactory = (conjunction: SubordinatingConjunction|string): SubordinatingConjunction => {
-    CheckType(conjunction, [SubordinatingConjunction, "string"]);
+const SubordinatingConjunctionFactory = (conjunction: SubordinatingConjunction|WordMeta|string): SubordinatingConjunction => {
+    CheckType(conjunction, [SubordinatingConjunction, WordMeta, "string"]);
     if(SubordinatingConjunction.isSubordinatingConjunction(conjunction)) {
         return conjunction;
     }

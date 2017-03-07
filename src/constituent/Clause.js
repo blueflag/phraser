@@ -6,6 +6,7 @@ import {Verb, VerbFactory} from './Verb';
 import {AdjectivePhrase, AdjectivePhraseFactory} from './AdjectivePhrase';
 import {NounPhrase, NounPhraseFactory} from './NounPhrase';
 import {VerbPhrase, VerbPhraseFactory} from './VerbPhrase';
+import {WordMeta} from './WordMeta';
 import {
     List,
     Record
@@ -43,9 +44,9 @@ class Clause extends Constituent {
 }
 
 const ClauseFactory = (
-    subjectOrClause: Clause|NounPhrase|Noun|string,
-    verb: VerbPhrase|Verb|string,
-    object: ?NounPhrase|Noun|AdjectivePhrase|Adjective|string
+    subjectOrClause: Clause|NounPhrase|Noun|WordMeta|string,
+    verb: VerbPhrase|Verb|WordMeta|string,
+    object: ?NounPhrase|Noun|AdjectivePhrase|Adjective
 ): Clause => {
 
     if(Clause.isClause(subjectOrClause)) {

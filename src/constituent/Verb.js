@@ -1,5 +1,6 @@
 import Constituent from './Constituent';
 import {CheckType} from '../decls/TypeErrors';
+import {WordMeta} from './WordMeta';
 import {
     List,
     Record
@@ -21,8 +22,8 @@ class Verb extends Constituent {
 
 }
 
-const VerbFactory = (verb: Verb|string): Verb => {
-    CheckType(verb, [Verb, "string"]);
+const VerbFactory = (verb: Verb|WordMeta|string): Verb => {
+    CheckType(verb, [Verb, WordMeta, "string"]);
     if(verb instanceof Verb) {
         return verb;
     }

@@ -1,5 +1,6 @@
 import Constituent from './Constituent';
 import {CheckType} from '../decls/TypeErrors';
+import {WordMeta} from './WordMeta';
 import {
     List,
     Record
@@ -21,8 +22,8 @@ class Preposition extends Constituent {
 
 }
 
-const PrepositionFactory = (preposition: Preposition|string): Preposition => {
-    CheckType(preposition, [Preposition, "string"]);
+const PrepositionFactory = (preposition: Preposition|WordMeta|string): Preposition => {
+    CheckType(preposition, [Preposition, WordMeta, "string"]);
     if(Preposition.isPreposition(preposition)) {
         return preposition;
     }

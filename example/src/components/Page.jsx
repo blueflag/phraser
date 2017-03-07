@@ -78,7 +78,7 @@ export default (props) => {
                     NounPhrase(Noun("supply and demand metrics"))
                 ))
                 .modifier(filter)
-        ).render();
+        ).renderString();
 
         return sentence;
     });

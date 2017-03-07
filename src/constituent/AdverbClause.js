@@ -7,6 +7,7 @@ import {NounPhrase, NounPhraseFactory} from './NounPhrase';
 import {SubordinatingConjunction, SubordinatingConjunctionFactory} from './SubordinatingConjunction';
 import {Verb} from './Verb';
 import {VerbPhrase, VerbPhraseFactory} from './VerbPhrase';
+import {WordMeta} from './WordMeta';
 import {
     List,
     Record
@@ -46,10 +47,10 @@ class AdverbClause extends Constituent {
 }
 
 const AdverbClauseFactory = (
-    conjunctionOrAdvClause: AdverbClause|SubordinatingConjunction|string,
-    subject: ?NounPhrase|Noun|string,
-    verb: ?VerbPhrase|Verb|string,
-    object: ?NounPhrase|Noun|AdjectivePhrase|Adjective|string
+    conjunctionOrAdvClause: AdverbClause|SubordinatingConjunction|WordMeta|string,
+    subject: ?NounPhrase|Noun|WordMeta|string,
+    verb: ?VerbPhrase|Verb|WordMeta|string,
+    object: ?NounPhrase|Noun|AdjectivePhrase|Adjective
 ): AdverbClause => {
 
     if(AdverbClause.isAdverbClause(conjunctionOrAdvClause)) {

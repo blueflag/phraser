@@ -1,5 +1,6 @@
 import Constituent from './Constituent';
 import {CheckType} from '../decls/TypeErrors';
+import {WordMeta} from './WordMeta';
 import {
     List,
     Record
@@ -20,8 +21,8 @@ class Determiner extends Constituent {
     }
 }
 
-const DeterminerFactory = (determiner: Determiner|string): Determiner => {
-    CheckType(determiner, [Determiner, "string"]);
+const DeterminerFactory = (determiner: Determiner|WordMeta|string): Determiner => {
+    CheckType(determiner, [Determiner, WordMeta, "string"]);
     if(Determiner.isDeterminer(determiner)) {
         return determiner;
     }

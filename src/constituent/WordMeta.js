@@ -9,21 +9,20 @@ const WordMetaRecord = Record({
     meta: null
 });
 
-console.log("!!", Constituent);
-
 class WordMeta extends Constituent {
 
     static isWordMeta(obj: any): boolean {
         return typeof obj == "object" && obj instanceof WordMeta;
     }
 
-    _renderSelf(): string {
-        return "!!"; //this.data.word;
+    _postRenderSelf(): Object {
+        return this.data;
     }
 
-    render(): Object {
-        return "??"; //this.data.word.toObject();
+    _stringRenderSelf(): string {
+        return this.data.word;
     }
+
 }
 
 const WordMetaFactory = (word: WordMeta|string, meta: any): WordMeta => {

@@ -6,8 +6,6 @@ import {
     Record
 } from 'immutable';
 
-console.log("?");
-
 const AdjectiveRecord = Record({
     adjective: ""
 });

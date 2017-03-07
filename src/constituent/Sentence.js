@@ -1,6 +1,5 @@
 import Constituent from './Constituent';
-import {CheckType} from '../decls/TypeErrors';
-import {firstToUpper, withFullStop} from '../utils/String';
+import {firstToUpper} from '../utils/String';
 import {
     List,
     Record
@@ -30,7 +29,6 @@ class Sentence extends Constituent {
 }
 
 const SentenceFactory = (...sentence: Consitutent|string): Sentence => {
-    //sentence.forEach(ii => CheckType(ii, [Consitutent, "string"]));
     return new Sentence(SentenceRecord({
         sentence: List(sentence)
     }));

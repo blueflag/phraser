@@ -1,5 +1,4 @@
 import {Map, List} from 'immutable';
-import {WordMeta} from './WordMeta';
 
 class Constituent {
 
@@ -31,12 +30,21 @@ class Constituent {
 
     render(): List {
         return this.flatten()
-            .map(ii => ii._renderSelf());
-            //.map(ii => WordMeta.isWordMeta(ii) ? ii.render() : ii);
+            .map(ii => ii._renderSelf())
+            .map(ii => typeof ii == "object" && ii._postRenderSelf
+                ? ii._postRenderSelf()
+                : ii
+            );
     }
 
     renderString(): string {
-        return this.render().join(" ");
+        return this.flatten()
+            .map(ii => ii._renderSelf())
+            .map(ii => typeof ii == "object" && ii._stringRenderSelf
+                ? ii._stringRenderSelf()
+                : ii
+            )
+            .join(" ");
     }
 
     data(): Record {

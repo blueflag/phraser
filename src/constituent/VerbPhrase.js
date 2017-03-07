@@ -1,6 +1,7 @@
 import Constituent from './Constituent';
 import {Verb, VerbFactory} from './Verb';
 import {AdverbFactory} from './Adverb';
+import {WordMeta} from './WordMeta';
 
 import {
     List,
@@ -36,7 +37,7 @@ class VerbPhrase extends Constituent {
     }
 }
 
-const VerbPhraseFactory = (verb: VerbPhrase|Verb|string): VerbPhrase => {
+const VerbPhraseFactory = (verb: VerbPhrase|Verb|WordMeta|string): VerbPhrase => {
     if(VerbPhrase.isVerbPhrase(verb)) {
         return verb;
     }

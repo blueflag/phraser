@@ -1,5 +1,6 @@
 import Constituent from './Constituent';
 import {Adjective, AdjectiveFactory} from './Adjective';
+import {WordMeta} from './WordMeta';
 import {
     List,
     Record
@@ -22,7 +23,7 @@ class AdjectivePhrase extends Constituent {
     }
 }
 
-const AdjectivePhraseFactory = (adjective: AdjectivePhrase|Adjective|string): AdjectivePhrase => {
+const AdjectivePhraseFactory = (adjective: AdjectivePhrase|Adjective|WordMeta|string): AdjectivePhrase => {
     if(AdjectivePhrase.isAdjectivePhrase(adjective)) {
         return adjective;
     }

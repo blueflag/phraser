@@ -2,6 +2,7 @@ import Constituent from './Constituent';
 import {AdjectiveFactory} from './Adjective';
 import {DeterminerFactory} from './Determiner';
 import {Noun, NounFactory} from './Noun';
+import {WordMeta} from './WordMeta';
 
 // TODO - validate types on method args!
 
@@ -72,7 +73,7 @@ class NounPhrase extends Constituent {
     }
 }
 
-const NounPhraseFactory = (noun: NounPhrase|Noun|string): NounPhrase => {
+const NounPhraseFactory = (noun: NounPhrase|Noun|WordMeta|string): NounPhrase => {
     if(NounPhrase.isNounPhrase(noun)) {
         return noun;
     }

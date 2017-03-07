@@ -1,5 +1,6 @@
 import Constituent from './Constituent';
 import {Adverb, AdverbFactory} from './Adverb';
+import {WordMeta} from './WordMeta';
 import {
     List,
     Record
@@ -22,7 +23,7 @@ class AdverbPhrase extends Constituent {
     }
 }
 
-const AdverbPhraseFactory = (adverb: AdverbPhrase|Adverb|string): AdverbPhrase => {
+const AdverbPhraseFactory = (adverb: AdverbPhrase|Adverb|WordMeta|string): AdverbPhrase => {
     if(AdverbPhrase.isAdverbPhrase(adverb)) {
         return adverb;
     }
