@@ -1,11 +1,13 @@
 {
   "name": "phraser",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A small natural language generator. Makes words reads goods.",
   "main": "lib/index.js",
   "license": "MIT",
   "author": "Damien Clarke",
-  "files": ["lib"],
+  "files": [
+    "lib"
+  ],
   "repository": {
     "type": "git",
     "url": "git@github.com:dxinteractive/phraser.git"
