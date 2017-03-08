@@ -16,10 +16,10 @@ class AdjectivePhrase extends Constituent {
         return typeof obj == "object" && obj instanceof AdjectivePhrase;
     }
 
-    flatten(): List {
+    _flattenSelf(context: Map<string, any>): List {
         return this._flattenChildren([
             this.data.adjective
-        ]);
+        ], context);
     }
 }
 

@@ -18,11 +18,11 @@ class PrepositionPhrase extends Constituent {
         return typeof obj == "object" && obj instanceof PrepositionPhrase;
     }
 
-    flatten(): List {
+    _flattenSelf(context: Map<string, any>): List {
         return this._flattenChildren([
             this.data.preposition,
             this.data.object
-        ]);
+        ], context);
     }
 }
 

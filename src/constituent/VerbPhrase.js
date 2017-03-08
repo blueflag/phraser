@@ -19,6 +19,57 @@ class VerbPhrase extends Constituent {
         return typeof obj == "object" && obj instanceof VerbPhrase;
     }
 
+    _flattenSelf(context: Map<string, any>): List {
+        const {
+            tense,
+            aspect,
+            number,
+            person
+        } = context.toObject();
+
+        const perfect: boolean = aspect == "perfect" || aspect == "perfectContinuous";
+
+        var auxiliaries = null;
+
+        if(tense == "present" || !tense) {
+            if(aspect == "continuous") {
+                if(person == "first") {
+                    auxiliaries = number == "singular" ? "am" : "are";
+                } else if(person == "second") {
+                    auxiliaries = "are";
+                } else {
+                    auxiliaries = number == "singular" ? "is" : "are";
+                }
+            } else if(perfect) {
+                auxiliaries = number == "singular" && person == "third" ? "has" : "have";
+            }
+        } else if(tense == "past") {
+            if(aspect == "continuous") {
+                auxiliaries = number == "singular" && person != "second" ? "was" : "were";
+            } else if(perfect) {
+                auxiliaries = "had";
+            }
+        } else {
+            auxiliaries = tense == "futurePast" ? "would" : "will";
+            if(aspect == "continuous") {
+                auxiliaries += " be";
+            } else if(perfect) {
+                auxiliaries += " have";
+            }
+        }
+
+        if(aspect == "perfectContinuous") {
+            auxiliaries += " been";
+        }
+
+        return this._flattenChildren([
+            auxiliaries,
+            this.data.adverbs,
+            this.data.verb
+        ], context);
+    }
+
+
     // "quickly" ran
     // jumped "swiftly"
     // TODO adverbs have positions
@@ -29,11 +80,8 @@ class VerbPhrase extends Constituent {
         );
     }
 
-    flatten(): List {
-        return this._flattenChildren([
-            this.data.adverbs,
-            this.data.verb
-        ]);
+    adv(adv: Adverb|string): VerbPhrase {
+        return this.adverb(adv);
     }
 }
 
@@ -42,7 +90,7 @@ const VerbPhraseFactory = (verb: VerbPhrase|Verb|WordMeta|string): VerbPhrase =>
         return verb;
     }
     return new VerbPhrase(VerbPhraseRecord({
-        verb: VerbFactory(verb)
+        verb: VerbFactory()(verb)
     }));
 };
 

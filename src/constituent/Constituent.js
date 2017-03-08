@@ -2,21 +2,22 @@ import {Map, List} from 'immutable';
 
 class Constituent {
 
-    constructor(data: Map<string, any>) {
+    constructor(data: Map<string, any>, lexicon: Object = {}) {
         this.data = data;
+        this.lexicon = lexicon;
     }
 
     static isConstituent(obj: any): boolean {
         return typeof obj == "object" && obj instanceof Constituent;
     }
 
-    _flattenChildren(children: Array<Constituent|string|null|List<Constituent|string|null>>): List {
+    _flattenChildren(children: Array<Constituent|string|null|List<Constituent|string|null>>, context: Map<string, any> = Map()): List {
         return List(children)
             .flatten(true)
             .filter(ii => ii)
             .reduce((list: List<Constituent|string|null>, item: Constituent|string|null): List<Constituent|string> => {
                 const flattened: List = typeof item == "object" && item.flatten
-                    ? item.flatten()
+                    ? item._flattenSelf(context)
                     : List([item]);
 
                 return list.concat(flattened);
@@ -24,7 +25,19 @@ class Constituent {
             .filter(ii => ii);
     }
 
-    _flattenAndRenderSelf(): List {
+    _flattenSelf(context: Map<string, any>): List {
+        return this;
+    }
+
+    _renderSelf(): string {
+        return "...";
+    }
+
+    flatten(): List {
+        return this._flattenSelf(Map());
+    }
+
+    render(): List {
         return this.flatten()
             .reduce((list: List<string>, item: List<string>|string): List<string> => {
                 if(typeof item == "string") {
@@ -35,31 +48,16 @@ class Constituent {
                     ? list.concat(rendered)
                     : list.push(rendered);
             }, List());
-    }
 
-    _renderSelf(): string {
-        return "...";
-    }
 
-    flatten(): List {
-        return this;
-    }
-
-    render(): List {
-        return this._flattenAndRenderSelf()
-            .map(ii => typeof ii == "object" && ii._postRenderSelf
+            /*.map(ii => typeof ii == "object" && ii._postRenderSelf
                 ? ii._postRenderSelf()
                 : ii
-            );
+            );*/
     }
 
     renderString(): string {
-        return this._flattenAndRenderSelf()
-            .map(ii => typeof ii == "object" && ii._stringRenderSelf
-                ? ii._stringRenderSelf()
-                : ii
-            )
-            .join(" ");
+        return this.render().join(" ");
     }
 }
 

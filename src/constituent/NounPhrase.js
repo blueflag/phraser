@@ -1,10 +1,10 @@
 import Constituent from './Constituent';
 import {AdjectiveFactory} from './Adjective';
 import {DeterminerFactory} from './Determiner';
-import {Noun, NounFactory} from './Noun';
+import {Noun, NounFactory, NUMBER_ENUM, PERSON_ENUM} from './Noun';
 import {PrepositionPhrase} from './PrepositionPhrase';
 import {WordMeta} from './WordMeta';
-import {CheckType} from '../decls/TypeErrors';
+import {CheckType, CheckEnum} from '../decls/TypeErrors';
 
 // TODO - validate types on method args!
 
@@ -22,9 +22,45 @@ const NounPhraseRecord = Record({
 
 class NounPhrase extends Constituent {
 
+    //
+    // static methods
+    //
+
     static isNounPhrase(obj: any): boolean {
         return typeof obj == "object" && obj instanceof NounPhrase;
     }
+
+    //
+    // internal methods
+    //
+
+    _flattenSelf(context: Map<string, any>): List {
+        var {
+            determiner,
+            adjectives,
+            noun,
+            modifiers
+        } = this.data;
+
+        // set noun pluralization based off determiner's quantity
+        if(noun && determiner) {
+            const {quantity} = determiner.data;
+            if(quantity != null) {
+                context = context.set('number', Math.abs(quantity) != 1 ? "plural" : "singular");
+            }
+        }
+
+        return this._flattenChildren([
+            determiner,
+            adjectives,
+            noun,
+            modifiers
+        ], context);
+    }
+
+    //
+    // determiner
+    //
 
     // "the" dog
     // "a" dog
@@ -34,7 +70,8 @@ class NounPhrase extends Constituent {
 
     determiner(determiner: Determiner|WordMeta|string): NounPhrase {
         return new NounPhrase(
-            this.data.set('determiner', DeterminerFactory(determiner))
+            this.data.set('determiner', DeterminerFactory(determiner)),
+            this.lexicon
         );
     }
 
@@ -50,14 +87,75 @@ class NounPhrase extends Constituent {
         return this.determiner('a');
     }
 
+    //
+    // noun methods
+    //
+
+    number(number: string): NounPhrase {
+        CheckEnum(number, NUMBER_ENUM);
+        return new NounPhrase(
+            this.data.set('noun', this.data.noun.number(number)),
+            this.lexicon
+        );
+    }
+
+    plural(): NounPhrase {
+        return this.number('plural');
+    }
+
+    singular(): NounPhrase {
+        return this.number('singular');
+    }
+
+    single(): NounPhrase {
+        return this.number('singular');
+    }
+
+    //
+    // person
+    //
+
+    person(person: string): NounPhrase {
+        CheckEnum(person, PERSON_ENUM);
+        return new NounPhrase(
+            this.data.set('noun', this.data.noun.person(person)),
+            this.lexicon
+        );
+    }
+
+    firstPerson(): NounPhrase {
+        return this.person('first');
+    }
+
+    secondPerson(): NounPhrase {
+        return this.person('second');
+    }
+
+    thirdPerson(): NounPhrase {
+        return this.person('third');
+    }
+
+    //
+    // adjectives
+    //
+
     // "blue" dog
     // "fat" dog
 
     adjective(adj: Adjective|WordMeta|string): NounPhrase {
         return new NounPhrase(
-            this.data.update('adjectives', adjs => adjs.push(AdjectiveFactory(adj)))
+            this.data.update('adjectives', adjs => adjs.push(AdjectiveFactory(adj))),
+            this.lexicon
         );
     }
+
+    adj(adj: Adjective|WordMeta|string): NounPhrase {
+        return this.adjective(adj);
+    }
+
+    //
+    // modifier
+    //
 
     // dog "in the wild"
     // dog "with no collar"
@@ -78,31 +176,6 @@ class NounPhrase extends Constituent {
 
     //TODO: complements(), such as "the student OF PHYSICS". Complements can't be placed after modifiers (adjuncts)
 
-    flatten(): List {
-        var {
-            determiner,
-            adjectives,
-            noun,
-            modifiers
-        } = this.data;
-
-        // set noun pluralization based off determiner's quantity
-        if(noun && determiner) {
-            const {quantity} = determiner.data;
-            if(quantity != null && quantity != 1 && quantity != -1) {
-                noun = noun.plural();
-            } else {
-                noun = noun.singular();
-            }
-        }
-
-        return this._flattenChildren([
-            determiner,
-            adjectives,
-            noun,
-            modifiers
-        ]);
-    }
 }
 
 const NounPhraseFactory = (noun: NounPhrase|Noun|WordMeta|string): NounPhrase => {

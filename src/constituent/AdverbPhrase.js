@@ -16,10 +16,10 @@ class AdverbPhrase extends Constituent {
         return typeof obj == "object" && obj instanceof AdverbPhrase;
     }
 
-    flatten(): List {
+    _flattenSelf(context: Map<string, any>): List {
         return this._flattenChildren([
             this.data.adverb
-        ]);
+        ], context);
     }
 }
 

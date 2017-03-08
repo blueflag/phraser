@@ -20,8 +20,11 @@ class Determiner extends Constituent {
     _renderSelf(): List {
         return List()
             .push(this.data.determiner)
-            .push(this.data.quantity)
-            .filter(ii => ii != null);
+            .push(this.data.quantity != null
+                ? this.data.quantity + ""
+                : null
+            )
+            .filter(ii => ii);
     }
 
     quantity(quantity: number): Determiner {

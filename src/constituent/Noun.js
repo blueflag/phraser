@@ -1,38 +1,117 @@
+import {Record} from 'immutable';
 import Constituent from './Constituent';
 import {CheckType} from '../decls/TypeErrors';
+import {CheckEnum} from '../decls/TypeErrors';
 import {WordMeta} from './WordMeta';
-import {
-    List,
-    Record
-} from 'immutable';
+
+const NUMBER_ENUM = [
+    'plural',
+    'singular'
+];
+
+const PERSON_ENUM = [
+    'first',
+    'second',
+    'third'
+];
 
 const NounRecord = Record({
     noun: "",
-    plural: false
+    number: "singular",
+    person: "third"
 });
 
 class Noun extends Constituent {
+
+    //
+    // static methods
+    //
 
     static isNoun(obj: any): boolean {
         return typeof obj == "object" && obj instanceof Noun;
     }
 
+    //
+    // internal methods
+    //
+
+    _flattenSelf(context: Map<string, any>): List {
+
+        // override number from context if it exists
+        const data: NounRecord = this.data
+            .update('number', ownNumber => context.get('number') || ownNumber);
+
+        return new Noun(
+            data,
+            this.lexicon
+        );
+    }
+
     _renderSelf(): string {
-        return this.data.plural
-            ? this.data.noun + "s" // TODO make this work from a dictionary
-            : this.data.noun;
+        var {
+            noun,
+            number,
+            person
+        } = this.data;
+
+        if(person == "first") {
+            return number == "singular" ? "I" : "we";
+        }
+        if(person == "second") {
+            return "you";
+        }
+        if(number == "plural") {
+            noun += "s";
+        }
+        return noun;
+    }
+
+    //
+    // number (pluralization)
+    //
+
+    number(number: string): Noun {
+        CheckEnum(number, NUMBER_ENUM);
+        return new Noun(
+            this.data.set('number', number),
+            this.lexicon
+        );
     }
 
     plural(): Noun {
-        return new Noun(this.data.set('plural', true));
+        return this.number('plural');
     }
 
     singular(): Noun {
-        return new Noun(this.data.set('plural', false));
+        return this.number('singular');
     }
 
     single(): Noun {
-        return this.singular();
+        return this.number('singular');
+    }
+
+    //
+    // person
+    //
+
+    person(person: string): Noun {
+        CheckEnum(person, PERSON_ENUM);
+        return new Noun(
+            this.data.set('person', person),
+            this.lexicon
+        );
+    }
+
+    firstPerson(): Noun {
+        return this.person('first');
+    }
+
+    secondPerson(): Noun {
+        return this.person('second');
+    }
+
+    thirdPerson(): Noun {
+        return this.person('third');
     }
 
 }
@@ -47,5 +126,7 @@ const NounFactory = (noun: Noun|WordMeta|string): Noun => {
 
 export {
     Noun,
-    NounFactory
+    NounFactory,
+    NUMBER_ENUM,
+    PERSON_ENUM
 };

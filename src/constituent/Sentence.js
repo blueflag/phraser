@@ -15,15 +15,11 @@ class Sentence extends Constituent {
         return typeof obj == "object" && obj instanceof Sentence;
     }
 
-    flatten(): List {
+    _flattenSelf(context: Map<string, any>): List {
         return this._flattenChildren([
-            this.data.sentence
-        ]);
-    }
-
-    render(): List {
-        return super.render()
-            .update(0, firstToUpper);
+            this.data.sentence,
+            "."
+        ], context);
     }
 
 }
