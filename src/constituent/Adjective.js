@@ -1,15 +1,17 @@
-// @flow
-
 import {Record} from 'immutable';
 import Constituent from './Constituent';
 import {CheckType} from '../decls/TypeErrors';
-import {WordMeta} from './WordMeta';
 
 const AdjectiveRecord = Record({
     adjective: ""
 });
 
 class Adjective extends Constituent {
+
+    constructor(...args: any) {
+        super(...args);
+        this.types = ["Adjective"];
+    }
 
     static isAdjective(obj: any): boolean {
         return typeof obj == "object" && obj instanceof Adjective;
@@ -20,8 +22,8 @@ class Adjective extends Constituent {
     }
 }
 
-const AdjectiveFactory = (adjective: Adjective|WordMeta|string): Adjective => {
-    CheckType(adjective, [Adjective, WordMeta, "string"]);
+const AdjectiveFactory = (adjective: Adjective|string): Adjective => {
+    CheckType(adjective, ["Adjective", "string"]);
     if(Adjective.isAdjective(adjective)) {
         return adjective;
     }

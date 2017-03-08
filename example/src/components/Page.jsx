@@ -4,17 +4,9 @@ import Lexicon from './Lexicon';
 import {List} from 'immutable';
 
 const {
-    Adjective,
-    AdjectivePhrase,
     Clause,
-    Noun,
-    NounPhrase,
     Paragraph,
-    Preposition,
-    PrepositionPhrase,
     Sentence,
-    Verb,
-    VerbPhrase,
     AdjP,
     Det,
     NP,
@@ -24,42 +16,39 @@ const {
 } = Constituent(Lexicon);
 
 
+const filters: Object = {
+    suburb: {
+        exactly: "Richmond"
+    },
+    postcode: {
+        exactly: "3121"
+    },
+    propertyType: {
+        oneOf: ["?", ":("]
+    },
+    bedrooms: {
+        exactly: 2
+    }
+};
+
+// TODO
+
+// ADD ALL PHRASES!!
+// USE FILTERS IN PHRASES!!!
+// MAKE WRAPPER COMPONENT TO REPLACE WORDMETA!!!!
+// ADD COMMAS!!!!
+
 export default () => {
     var sentences = [];
 
     sentences.push('<h2>RealDemand examples and tests</h2>');
     sentences.push('<h4>Suburb Ranking</h4>');
     sentences.push('<p>e.g. <em>"Richmond ranks 4th for supply and demand metrics when comparing all suburbs in Victoria."</em></p>');
-    sentences.push(() => {
-        const filter = Clause(
-            null,
-            VerbPhrase(Verb("comparing")),
-            NounPhrase(Noun("suburbs"))
-                .determiner("all")
-                .modifier(PrepositionPhrase(
-                    Preposition("in"),
-                    NounPhrase(Noun("Victoria")) // EXAMPLE passing objects through as a word to facilitate word meta data and rich rendering on front end
-                ))
-        ).whAdverb("when");
 
-        return Sentence(
-            Clause(
-                NounPhrase(Noun("Richmond")),
-                VerbPhrase(Verb("ranks")), // TODO verb tenses so this can just be "rank"
-                AdjectivePhrase(Adjective("4th")) // TODO some kind of helper class that can use numeral and turn numbers to ordered numbers
-            )
-                .modifier(PrepositionPhrase(
-                    Preposition("for"),
-                    NounPhrase(Noun("supply and demand metrics")) // TODO noun adjuncts to describe SUPPLY AND DEMAND metrics
-                ))
-                .modifier(filter)
-        );
-    });
-
-    sentences.push('<p>...the same thing written shorthand...</p>');
     sentences.push(() => {
-        const comparisonNoun = NP("suburbs")
-            .det("all")
+        const comparisonNoun = NP("suburb")
+            .plural()
+            .det("all") // ALL, BOTH etc
             .modifier(PP("in", "Victoria"));
 
         return Sentence(
@@ -70,7 +59,7 @@ export default () => {
             )
                 .present()
                 .modifier(PP("for", "supply and demand metrics"))
-                .modifier(Clause(null, "comparing", comparisonNoun).whAdverb("when"))
+                .modifier(Clause(comparisonNoun, VP("is"), AdjP("compared")).whAdverb("when"))
         );
     });
 

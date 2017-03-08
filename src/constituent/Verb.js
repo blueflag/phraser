@@ -1,7 +1,6 @@
 import {Record} from 'immutable';
 import Constituent from './Constituent';
 import {CheckType, CheckEnum} from '../decls/TypeErrors';
-import {WordMeta} from './WordMeta';
 
 const TENSE_ENUM = [
     'past',
@@ -26,6 +25,11 @@ const VerbRecord = Record({
 });
 
 class Verb extends Constituent {
+
+    constructor(...args: any) {
+        super(...args);
+        this.types = ["Verb"];
+    }
 
     static isVerb(obj: any): boolean {
         return typeof obj == "object" && obj instanceof Verb;
@@ -128,8 +132,8 @@ class Verb extends Constituent {
 
 }
 
-const VerbFactory = (lexicon: Object) => (verb: Verb|WordMeta|string): Verb => {
-    CheckType(verb, [Verb, WordMeta, "string"]);
+const VerbFactory = (lexicon: Object) => (verb: Verb|string): Verb => {
+    CheckType(verb, ["Verb", "string"]);
     if(verb instanceof Verb) {
         return verb;
     }

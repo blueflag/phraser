@@ -1,24 +1,25 @@
+import {List, Record} from 'immutable';
 import Constituent from './Constituent';
 import {Preposition, PrepositionFactory} from './Preposition';
 import {NounPhrase, NounPhraseFactory} from './NounPhrase';
-import {WordMeta} from './WordMeta';
-import {
-    List,
-    Record
-} from 'immutable';
 
 const PrepositionPhraseRecord = Record({
     preposition: null, // Preposition
-    object: null // NounPhrase, TODO can also have Pronoun|Gerund|Clause
+    object: null // NounPhrase, TODO can also have Pronoun|Clause
 });
 
 class PrepositionPhrase extends Constituent {
+
+    constructor(...args: any) {
+        super(...args);
+        this.types = ["PrepositionPhrase", "Modifier"];
+    }
 
     static isPrepositionPhrase(obj: any): boolean {
         return typeof obj == "object" && obj instanceof PrepositionPhrase;
     }
 
-    _flattenSelf(context: Map<string, any>): List {
+    _flattenSelf(context: Map<string, any>): List<Constituent|string> {
         return this._flattenChildren([
             this.data.preposition,
             this.data.object
@@ -27,8 +28,8 @@ class PrepositionPhrase extends Constituent {
 }
 
 const PrepositionPhraseFactory = (
-    prepositionOrPhrase: PrepositionPhrase|Preposition|WordMeta|string,
-    object: NounPhrase|Noun|WordMeta|string
+    prepositionOrPhrase: PrepositionPhrase|Preposition|string,
+    object: NounPhrase|Noun|string
 ): PrepositionPhrase => {
 
     if(PrepositionPhrase.isPrepositionPhrase(prepositionOrPhrase)) {

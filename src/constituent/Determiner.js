@@ -1,10 +1,6 @@
+import {List, Record} from 'immutable';
 import Constituent from './Constituent';
 import {CheckType} from '../decls/TypeErrors';
-import {WordMeta} from './WordMeta';
-import {
-    List,
-    Record
-} from 'immutable';
 
 const DeterminerRecord = Record({
     determiner: "",
@@ -35,8 +31,8 @@ class Determiner extends Constituent {
     }
 }
 
-const DeterminerFactory = (determiner: Determiner|WordMeta|string): Determiner => {
-    CheckType(determiner, [Determiner, WordMeta, "string"]);
+const DeterminerFactory = (determiner: Determiner|string): Determiner => {
+    CheckType(determiner, [Determiner, "string"]);
     if(Determiner.isDeterminer(determiner)) {
         return determiner;
     }

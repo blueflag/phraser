@@ -8,7 +8,9 @@ function CheckType(item: any, validTypes: Array<string|Object>) {
                 return item == null;
             }
             if(typeof test == "string") {
-                return typeof item == test;
+                return item && item.types && item.types.indexOf(test) != -1
+                    ? true
+                    : typeof item == test;
             }
             return typeof item == "object"
                 ? item instanceof test

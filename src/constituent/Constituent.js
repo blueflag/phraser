@@ -5,6 +5,8 @@ class Constituent {
     constructor(data: Map<string, any>, lexicon: Object = {}) {
         this.data = data;
         this.lexicon = lexicon;
+        this.meta = null;
+        this.types = [];
     }
 
     static isConstituent(obj: any): boolean {
@@ -25,7 +27,7 @@ class Constituent {
             .filter(ii => ii);
     }
 
-    _flattenSelf(context: Map<string, any>): List {
+    _flattenSelf(context: Map<string, any>): List<Constituent|string> {
         return this;
     }
 
@@ -48,16 +50,14 @@ class Constituent {
                     ? list.concat(rendered)
                     : list.push(rendered);
             }, List());
-
-
-            /*.map(ii => typeof ii == "object" && ii._postRenderSelf
-                ? ii._postRenderSelf()
-                : ii
-            );*/
     }
 
     renderString(): string {
         return this.render().join(" ");
+    }
+
+    meta(meta: any) {
+        this.meta = meta;
     }
 }
 

@@ -1,13 +1,17 @@
+import {Record} from 'immutable';
 import Constituent from './Constituent';
 import {CheckType} from '../decls/TypeErrors';
-import {WordMeta} from './WordMeta';
-import {Record} from 'immutable';
 
 const ConjunctionRecord = Record({
     conjunction: ""
 });
 
 class Conjunction extends Constituent {
+
+    constructor(...args: any) {
+        super(...args);
+        this.types = ["Conjunction"];
+    }
 
     static isConjunction(obj: any): boolean {
         return typeof obj == "object" && obj instanceof Conjunction;
@@ -19,8 +23,8 @@ class Conjunction extends Constituent {
 
 }
 
-const ConjunctionFactory = (conjunction: Conjunction|WordMeta|string): Conjunction => {
-    CheckType(conjunction, [Conjunction, WordMeta, "string"]);
+const ConjunctionFactory = (conjunction: Conjunction|string): Conjunction => {
+    CheckType(conjunction, ["Conjunction", "string"]);
     if(Conjunction.isConjunction(conjunction)) {
         return conjunction;
     }

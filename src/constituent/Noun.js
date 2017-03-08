@@ -2,7 +2,6 @@ import {Record} from 'immutable';
 import Constituent from './Constituent';
 import {CheckType} from '../decls/TypeErrors';
 import {CheckEnum} from '../decls/TypeErrors';
-import {WordMeta} from './WordMeta';
 
 const NUMBER_ENUM = [
     'plural',
@@ -35,7 +34,7 @@ class Noun extends Constituent {
     // internal methods
     //
 
-    _flattenSelf(context: Map<string, any>): List {
+    _flattenSelf(context: Map<string, any>): List<Constituent|string> {
 
         // override number from context if it exists
         const data: NounRecord = this.data
@@ -116,8 +115,8 @@ class Noun extends Constituent {
 
 }
 
-const NounFactory = (noun: Noun|WordMeta|string): Noun => {
-    CheckType(noun, [Noun, WordMeta, "string"]);
+const NounFactory = (noun: Noun|string): Noun => {
+    CheckType(noun, [Noun, "string"]);
     if(Noun.isNoun(noun)) {
         return noun;
     }

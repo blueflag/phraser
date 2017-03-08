@@ -1,16 +1,17 @@
+import {Record} from 'immutable';
 import Constituent from './Constituent';
 import {CheckType} from '../decls/TypeErrors';
-import {WordMeta} from './WordMeta';
-import {
-    List,
-    Record
-} from 'immutable';
 
 const AdverbRecord = Record({
     adverb: ""
 });
 
 class Adverb extends Constituent {
+
+    constructor(...args: any) {
+        super(...args);
+        this.types = ["Adverb"];
+    }
 
     static isAdverb(obj: any): boolean {
         return typeof obj == "object" && obj instanceof Adverb;
@@ -21,8 +22,8 @@ class Adverb extends Constituent {
     }
 }
 
-const AdverbFactory = (adverb: Adverb|WordMeta|string): Adverb => {
-    CheckType(adverb, [Adverb, WordMeta, "string"]);
+const AdverbFactory = (adverb: Adverb|string): Adverb => {
+    CheckType(adverb, ["Adverb", "string"]);
     if(Adverb.isAdverb(adverb)) {
         return adverb;
     }

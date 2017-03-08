@@ -1,13 +1,17 @@
+import {Record} from 'immutable';
 import Constituent from './Constituent';
 import {CheckType} from '../decls/TypeErrors';
-import {WordMeta} from './WordMeta';
-import {Record} from 'immutable';
 
 const PronounRecord = Record({
     pronoun: ""
 });
 
 class Pronoun extends Constituent {
+
+    constructor(...args: any) {
+        super(...args);
+        this.types = ["Pronoun", "Noun"];
+    }
 
     static isPronoun(obj: any): boolean {
         return typeof obj == "object" && obj instanceof Pronoun;
@@ -19,8 +23,8 @@ class Pronoun extends Constituent {
 
 }
 
-const PronounFactory = (pronoun: Pronoun|WordMeta|string): Pronoun => {
-    CheckType(pronoun, [Pronoun, WordMeta, "string"]);
+const PronounFactory = (pronoun: Pronoun|string): Pronoun => {
+    CheckType(pronoun, ["Pronoun", "string"]);
     if(Pronoun.isPronoun(pronoun)) {
         return pronoun;
     }

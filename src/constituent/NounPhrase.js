@@ -1,17 +1,10 @@
+import {List, Record} from 'immutable';
 import Constituent from './Constituent';
 import {AdjectiveFactory} from './Adjective';
 import {DeterminerFactory} from './Determiner';
 import {Noun, NounFactory, NUMBER_ENUM, PERSON_ENUM} from './Noun';
 import {PrepositionPhrase} from './PrepositionPhrase';
-import {WordMeta} from './WordMeta';
 import {CheckType, CheckEnum} from '../decls/TypeErrors';
-
-// TODO - validate types on method args!
-
-import {
-    List,
-    Record
-} from 'immutable';
 
 const NounPhraseRecord = Record({
     noun: null, // Noun|Pronoun
@@ -21,6 +14,11 @@ const NounPhraseRecord = Record({
 });
 
 class NounPhrase extends Constituent {
+
+    constructor(...args: any) {
+        super(...args);
+        this.types = ["NounPhrase"];
+    }
 
     //
     // static methods
@@ -34,7 +32,7 @@ class NounPhrase extends Constituent {
     // internal methods
     //
 
-    _flattenSelf(context: Map<string, any>): List {
+    _flattenSelf(context: Map<string, any>): List<Constituent|string> {
         var {
             determiner,
             adjectives,
@@ -68,14 +66,14 @@ class NounPhrase extends Constituent {
     // "most" dogs
     // "7" dogs
 
-    determiner(determiner: Determiner|WordMeta|string): NounPhrase {
+    determiner(determiner: Determiner|string): NounPhrase {
         return new NounPhrase(
             this.data.set('determiner', DeterminerFactory(determiner)),
             this.lexicon
         );
     }
 
-    det(determiner: Determiner|WordMeta|string): NounPhrase {
+    det(determiner: Determiner|string): NounPhrase {
         return this.determiner(determiner);
     }
 
@@ -142,14 +140,14 @@ class NounPhrase extends Constituent {
     // "blue" dog
     // "fat" dog
 
-    adjective(adj: Adjective|WordMeta|string): NounPhrase {
+    adjective(adj: Adjective|string): NounPhrase {
         return new NounPhrase(
             this.data.update('adjectives', adjs => adjs.push(AdjectiveFactory(adj))),
             this.lexicon
         );
     }
 
-    adj(adj: Adjective|WordMeta|string): NounPhrase {
+    adj(adj: Adjective|string): NounPhrase {
         return this.adjective(adj);
     }
 
@@ -167,8 +165,8 @@ class NounPhrase extends Constituent {
     // YouTube showed that the cat played the PIANO in the living room.
     // from http://allthingslinguistic.com/post/102131750573/how-to-draw-a-syntax-tree-part-8-a-step-by-step
 
-    modifier(modifier: PrepositionPhrase/*|ParticiplePhrase|AdjectiveClause|AdverbClause|Infinitive|WordMeta|string*/): NounPhrase {
-        CheckType(modifier, [PrepositionPhrase]);
+    modifier(modifier: any): NounPhrase {
+        CheckType(modifier, ["Modifier"]);
         return new NounPhrase(
             this.data.update('modifiers', modifiers => modifiers.push(modifier))
         );
@@ -178,7 +176,7 @@ class NounPhrase extends Constituent {
 
 }
 
-const NounPhraseFactory = (noun: NounPhrase|Noun|WordMeta|string): NounPhrase => {
+const NounPhraseFactory = (noun: NounPhrase|Noun|string): NounPhrase => {
     if(NounPhrase.isNounPhrase(noun)) {
         return noun;
     }

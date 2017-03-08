@@ -1,12 +1,7 @@
+import {List, Record} from 'immutable';
 import Constituent from './Constituent';
 import {Verb, VerbFactory} from './Verb';
 import {AdverbFactory} from './Adverb';
-import {WordMeta} from './WordMeta';
-
-import {
-    List,
-    Record
-} from 'immutable';
 
 const VerbPhraseRecord = Record({
     verb: null, // Verb
@@ -15,11 +10,16 @@ const VerbPhraseRecord = Record({
 
 class VerbPhrase extends Constituent {
 
+    constructor(...args: any) {
+        super(...args);
+        this.types = ["VerbPhrase"];
+    }
+
     static isVerbPhrase(obj: any): boolean {
         return typeof obj == "object" && obj instanceof VerbPhrase;
     }
 
-    _flattenSelf(context: Map<string, any>): List {
+    _flattenSelf(context: Map<string, any>): List<Constituent|string> {
         const {
             tense,
             aspect,
@@ -85,7 +85,7 @@ class VerbPhrase extends Constituent {
     }
 }
 
-const VerbPhraseFactory = (verb: VerbPhrase|Verb|WordMeta|string): VerbPhrase => {
+const VerbPhraseFactory = (verb: VerbPhrase|Verb|string): VerbPhrase => {
     if(VerbPhrase.isVerbPhrase(verb)) {
         return verb;
     }

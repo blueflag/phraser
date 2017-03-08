@@ -1,9 +1,6 @@
+import {List, Record} from 'immutable';
 import Constituent from './Constituent';
 import {firstToUpper} from '../utils/String';
-import {
-    List,
-    Record
-} from 'immutable';
 
 const SentenceRecord = Record({
     sentence: List()
@@ -11,11 +8,16 @@ const SentenceRecord = Record({
 
 class Sentence extends Constituent {
 
+    constructor(...args: any) {
+        super(...args);
+        this.types = ["Sentence"];
+    }
+
     static isSentence(obj: any): boolean {
         return typeof obj == "object" && obj instanceof Sentence;
     }
 
-    _flattenSelf(context: Map<string, any>): List {
+    _flattenSelf(context: Map<string, any>): List<Constituent|string> {
         return this._flattenChildren([
             this.data.sentence,
             "."

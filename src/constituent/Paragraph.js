@@ -7,11 +7,16 @@ const ParagraphRecord = Record({
 
 class Paragraph extends Constituent {
 
+    constructor(...args: any) {
+        super(...args);
+        this.types = ["Paragraph"];
+    }
+
     static isParagraph(obj: any): boolean {
         return typeof obj == "object" && obj instanceof Paragraph;
     }
 
-    _flattenSelf(context: Map<string, any>): List {
+    _flattenSelf(context: Map<string, any>): List<Constituent|string> {
         return this._flattenChildren([
             this.data.sentences
         ], context);

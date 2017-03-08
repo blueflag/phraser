@@ -14,7 +14,6 @@ import {PronounFactory} from './constituent/Pronoun';
 import {SentenceFactory} from './constituent/Sentence';
 import {VerbFactory} from './constituent/Verb';
 import {VerbPhraseFactory} from './constituent/VerbPhrase';
-import {WordMetaFactory} from './constituent/WordMeta';
 
 
 function Constituent(lexicon: Object) {
@@ -35,7 +34,6 @@ function Constituent(lexicon: Object) {
         Sentence: SentenceFactory,
         Verb: VerbFactory(lexicon),
         VerbPhrase: VerbPhraseFactory,
-        WordMeta: WordMetaFactory,
 
         // short hand
         Adj: AdjectiveFactory,
