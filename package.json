@@ -5,6 +5,7 @@
   "main": "lib/index.js",
   "license": "MIT",
   "author": "Damien Clarke",
+  "files": ["lib"],
   "repository": {
     "type": "git",
     "url": "git@github.com:dxinteractive/phraser.git"
