@@ -1,10 +1,9 @@
+// @flow
+
+import {Record} from 'immutable';
 import Constituent from './Constituent';
 import {CheckType} from '../decls/TypeErrors';
 import {WordMeta} from './WordMeta';
-import {
-    List,
-    Record
-} from 'immutable';
 
 const AdjectiveRecord = Record({
     adjective: ""

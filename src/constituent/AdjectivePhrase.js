@@ -1,10 +1,9 @@
+// @flow
+
+import {List, Record} from 'immutable';
 import Constituent from './Constituent';
 import {Adjective, AdjectiveFactory} from './Adjective';
 import {WordMeta} from './WordMeta';
-import {
-    List,
-    Record
-} from 'immutable';
 
 const AdjectivePhraseRecord = Record({
     adjective: null // Adjective
