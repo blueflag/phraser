@@ -57,8 +57,6 @@ class Verb extends Constituent {
 
         //console.log(this.lexicon);
 
-        console.log(number);
-
         if(aspect == "continuous" || aspect == "perfectContinuous") {
             verb += "ing";
         } else if(aspect == "perfect" || tense == "past") {

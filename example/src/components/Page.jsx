@@ -65,9 +65,10 @@ export default () => {
         return Sentence(
             Clause(
                 "Richmond",
-                "ranks", // TODO verb tenses so this can just be "rank"
+                "rank",
                 AdjP("4th") // TODO some kind of helper class that can use numeral and turn numbers to ordered numbers
             )
+                .present()
                 .modifier(PP("for", "supply and demand metrics"))
                 .modifier(Clause(null, "comparing", comparisonNoun).whAdverb("when"))
         );
@@ -79,9 +80,12 @@ export default () => {
         return Sentence(
             Clause(
                 NP("supply").det("Hawthorn's"), // TODO separate type or method for possessive determiners
-                VP("trending").adverb("slightly upward") // TODO add verb dictionary and "has been"
+                VP("trend").adverb("slightly upward") // TODO add verb dictionary
+                // ^ TODO adverb positions
                 // ^ TODO add degree as a type for "very" etc.
             )
+                .present()
+                .perfectContinuous()
                 .modifier(PP("looking at", NP("month").det(Det("the last").quantity(6))))
         );
     });
@@ -93,9 +97,10 @@ export default () => {
                 NP("average number")
                     .the()
                     .modifier(PP("of", "listings")),
-                VP("is")
+                VP("is"),
+                NP("34")
             )
-                .modifier(PP("looking at", NP("month").det(Det("the last").quantity(6))))
+                .modifier(PP("looking at", NP("month").det(Det("the last").quantity(6)))) // TODO, fronting
         );
     });
 
