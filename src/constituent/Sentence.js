@@ -3,7 +3,7 @@ import {Constituent, ConstituentRecordFactory} from './Constituent';
 
 const SentenceRecord = ConstituentRecordFactory({
     sentence: List(),
-    append: List(["."])
+    after: List(["."])
 });
 
 class Sentence extends Constituent {

@@ -3,10 +3,10 @@ import {firstToUpper} from '../utils/String';
 
 const ConstituentRecordFactory = (initialValues: Object): Record => {
     const defaultValues: Object = {
-        prepend: List(),
-        append: List(),
-        appendPrevious: List(),
-        prependNext: List(),
+        before: List(),
+        after: List(),
+        afterPrevious: List(),
+        beforeNext: List(),
         meta: Map(),
         text: "",
         first: false
@@ -61,17 +61,17 @@ class Constituent {
                     .update('meta', meta => this.data.meta.merge(meta));
 
                 if(hasFirst && index == 0) {
-                    // if first child item, merge this constituents contents of prepend and appendPrevious into the child
+                    // if first child item, merge this constituents contents of before and afterPrevious into the child
                     data = data
-                        .update('prepend', ii => this.data.prepend.concat(ii))
-                        .update('appendPrevious', ii => this.data.appendPrevious.concat(ii));
+                        .update('before', ii => this.data.before.concat(ii))
+                        .update('afterPrevious', ii => this.data.afterPrevious.concat(ii));
                 }
 
                 if(hasLast && index + 1 == iter.size) {
-                    // if last child item, merge this constituents contents of append and prependNext into the child
+                    // if last child item, merge this constituents contents of after and beforeNext into the child
                     data = data
-                        .update('append', ii => ii.concat(this.data.append))
-                        .update('prependNext', ii => ii.concat(this.data.prependNext));
+                        .update('after', ii => ii.concat(this.data.after))
+                        .update('beforeNext', ii => ii.concat(this.data.beforeNext));
                 }
 
                 return item.clone({data});
@@ -95,27 +95,27 @@ class Constituent {
 
     flatten(): List<Constituent> {
         return this._flattenSelf(Map())
-            // append and prepend punctuation
+            // after and before punctuation
             .map((item: Constituent, index: number, iter: List<Constituent>): Constituent => {
 
-                // take appendPrevious from each next item in the list
-                // and add it to the end of this item's append
+                // take afterPrevious from each next item in the list
+                // and add it to the end of this item's after
                 if(index < iter.size - 1) {
-                    const {appendPrevious} = iter.get(index + 1).data;
-                    if(appendPrevious.size > 0) {
+                    const {afterPrevious} = iter.get(index + 1).data;
+                    if(afterPrevious.size > 0) {
                         item = item.clone({
-                            data: item.data.update('append', ii => ii.concat(appendPrevious))
+                            data: item.data.update('after', ii => ii.concat(afterPrevious))
                         });
                     }
                 }
 
-                // take prependNext from each previous item in the list
-                // and add it to the beginning of this item's prepend
+                // take beforeNext from each previous item in the list
+                // and add it to the beginning of this item's before
                 if(index > 0) {
-                    const {prependNext} = iter.get(index - 1).data;
-                    if(prependNext.size > 0) {
+                    const {beforeNext} = iter.get(index - 1).data;
+                    if(beforeNext.size > 0) {
                         item = item.clone({
-                            data: item.data.update('prepend', ii => prependNext.concat(ii))
+                            data: item.data.update('before', ii => beforeNext.concat(ii))
                         });
                     }
                 }
@@ -138,7 +138,7 @@ class Constituent {
                     text = firstToUpper(text);
                 }
 
-                text = item.data.prepend.join("") + text + item.data.append.join("");
+                text = item.data.before.join("") + text + item.data.after.join("");
                 const {meta} = item.data;
 
                 return Map({
@@ -156,15 +156,15 @@ class Constituent {
 
     // TODO check types without causing a dependency loop
 
-    prepend(item: Punctuation|string): Constituent {
+    before(item: Punctuation|string): Constituent {
         return this.clone({
-            data: this.data.set("prepend", List([item]))
+            data: this.data.set("before", List([item]))
         });
     }
 
-    append(item: Punctuation|string): Constituent {
+    after(item: Punctuation|string): Constituent {
         return this.clone({
-            data: this.data.set("append", List([item]))
+            data: this.data.set("after", List([item]))
         });
     }
 
@@ -172,26 +172,26 @@ class Constituent {
         if(!end) {
             return this.clone({
                 data: this.data
-                    .set("prepend", List([startOrBoth]))
-                    .set("append", List([startOrBoth]))
+                    .set("before", List([startOrBoth]))
+                    .set("after", List([startOrBoth]))
             });
         }
         return this.clone({
             data: this.data
-                .set("prepend", startOrBoth)
-                .set("append", end)
+                .set("before", startOrBoth)
+                .set("after", end)
         });
     }
 
-    appendPrevious(item: Punctuation|string): Constituent {
+    afterPrevious(item: Punctuation|string): Constituent {
         return this.clone({
-            data: this.data.set("appendPrevious", List([item]))
+            data: this.data.set("afterPrevious", List([item]))
         });
     }
 
-    prependNext(item: Punctuation|string): Constituent {
+    beforeNext(item: Punctuation|string): Constituent {
         return this.clone({
-            data: this.data.set("prependNext", List([item]))
+            data: this.data.set("beforeNext", List([item]))
         });
     }
 

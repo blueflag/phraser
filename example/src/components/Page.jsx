@@ -116,7 +116,7 @@ export default () => {
                         NP("20%").modifier(PP("of", NP("total views").the()))
                     )
                     .whDeterminer("which")
-                    .appendPrevious(",")
+                    .afterPrevious(",")
                 )
         );
     });
@@ -131,7 +131,7 @@ export default () => {
             )
                 .present()
                 .modifier(
-                    PP(P("from").appendPrevious(","), NP("bowl").a())
+                    PP(P("from").afterPrevious(","), NP("bowl").a())
                 )
         );
     });
@@ -145,14 +145,14 @@ export default () => {
     sentences.push(() => {
         return Sentence(
             NP("fire")
-        ).append("?")
+        ).after("?")
     });
 
     sentences.push(() => {
         return Sentence(
-            NP("hello"),
+            NP("hello").after(","),
             Clause(null, "are", NP("you")).whAdverb("how")
-        );
+        ).after("?");
     });
 
     /*
