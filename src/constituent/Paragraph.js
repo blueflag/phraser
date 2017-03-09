@@ -1,7 +1,7 @@
-import {List, Record} from 'immutable';
-import Constituent from './Constituent';
+import {List} from 'immutable';
+import {Constituent, ConstituentRecordFactory} from './Constituent';
 
-const ParagraphRecord = Record({
+const ParagraphRecord = ConstituentRecordFactory({
     sentences: List()
 });
 

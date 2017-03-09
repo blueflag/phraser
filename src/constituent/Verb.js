@@ -1,5 +1,4 @@
-import {Record} from 'immutable';
-import Constituent from './Constituent';
+import {Constituent, ConstituentRecordFactory} from './Constituent';
 import {CheckType, CheckEnum} from '../decls/TypeErrors';
 
 const TENSE_ENUM = [
@@ -16,7 +15,7 @@ const ASPECT_ENUM = [
     'perfectContinuous'
 ];
 
-const VerbRecord = Record({
+const VerbRecord = ConstituentRecordFactory({
     verb: "",
     tense: "", // blank so this is an infinitive by default
     aspect: "simple",

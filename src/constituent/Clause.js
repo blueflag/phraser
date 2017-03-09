@@ -1,5 +1,5 @@
 import {List, Map, Record} from 'immutable';
-import Constituent from './Constituent';
+import {Constituent, ConstituentRecordFactory} from './Constituent';
 import {CheckType, CheckEnum} from '../decls/TypeErrors';
 import {Adjective} from './Adjective';
 import {AdjectivePhrase} from './AdjectivePhrase';
@@ -11,7 +11,7 @@ import {Pronoun, PronounFactory} from './Pronoun';
 import {Verb, TENSE_ENUM, ASPECT_ENUM} from './Verb';
 import {VerbPhrase, VerbPhraseFactory} from './VerbPhrase';
 
-const ClauseRecord = Record({
+const ClauseRecord = ConstituentRecordFactory({
     subject: null, // ?NounPhrase
     verb: null, // VerbPhrase
     object: null, // ?Clause|NounPhrase|AdjectivePhrase|string
@@ -54,11 +54,11 @@ class Clause extends Constituent {
         const flatWh: List<Constituent|string> = this._flattenChildren([
             this.data.whDeterminer,
             this.data.whAdverb
-        ], context);
+        ], context, {hasLast: false});
 
         const flatSubject: List<Constituent|string> = this._flattenChildren([
             this.data.subject
-        ], context);
+        ], context, {hasFirst: false, hasLast: false});
 
         flatSubject
             .filter(ii => Noun.isNoun(ii))
@@ -72,7 +72,7 @@ class Clause extends Constituent {
             this.data.verb,
             this.data.object,
             this.data.modifiers
-        ], context);
+        ], context, {hasFirst: false});
 
         return List()
             .concat(flatWh)

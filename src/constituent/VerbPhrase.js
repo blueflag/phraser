@@ -1,9 +1,9 @@
-import {List, Record} from 'immutable';
-import Constituent from './Constituent';
+import {List} from 'immutable';
+import {Constituent, ConstituentRecordFactory} from './Constituent';
 import {Verb, VerbFactory} from './Verb';
 import {AdverbFactory} from './Adverb';
 
-const VerbPhraseRecord = Record({
+const VerbPhraseRecord = ConstituentRecordFactory({
     verb: null, // Verb
     adverbs: List() // List<Adverb>
 });

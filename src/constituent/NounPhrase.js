@@ -1,12 +1,11 @@
-import {List, Record} from 'immutable';
-import Constituent from './Constituent';
+import {List} from 'immutable';
+import {Constituent, ConstituentRecordFactory} from './Constituent';
 import {AdjectiveFactory} from './Adjective';
 import {DeterminerFactory} from './Determiner';
 import {Noun, NounFactory, NUMBER_ENUM, PERSON_ENUM} from './Noun';
-import {PrepositionPhrase} from './PrepositionPhrase';
 import {CheckType, CheckEnum} from '../decls/TypeErrors';
 
-const NounPhraseRecord = Record({
+const NounPhraseRecord = ConstituentRecordFactory({
     noun: null, // Noun|Pronoun
     determiner: null, // Determiner
     adjectives: List(), // List<Adjective>

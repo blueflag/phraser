@@ -1,7 +1,5 @@
-import {Record} from 'immutable';
-import Constituent from './Constituent';
-import {CheckType} from '../decls/TypeErrors';
-import {CheckEnum} from '../decls/TypeErrors';
+import {Constituent, ConstituentRecordFactory} from './Constituent';
+import {CheckType, CheckEnum} from '../decls/TypeErrors';
 
 const NUMBER_ENUM = [
     'plural',
@@ -14,7 +12,7 @@ const PERSON_ENUM = [
     'third'
 ];
 
-const NounRecord = Record({
+const NounRecord = ConstituentRecordFactory({
     noun: "",
     number: "singular",
     person: "third"

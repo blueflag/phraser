@@ -1,9 +1,9 @@
-import {List, Record} from 'immutable';
-import Constituent from './Constituent';
+import {List} from 'immutable';
+import {Constituent, ConstituentRecordFactory} from './Constituent';
 import {Preposition, PrepositionFactory} from './Preposition';
 import {NounPhrase, NounPhraseFactory} from './NounPhrase';
 
-const PrepositionPhraseRecord = Record({
+const PrepositionPhraseRecord = ConstituentRecordFactory({
     preposition: null, // Preposition
     object: null // NounPhrase, TODO can also have Pronoun|Clause
 });

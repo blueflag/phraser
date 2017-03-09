@@ -1,8 +1,8 @@
-import {List, Record} from 'immutable';
-import Constituent from './Constituent';
+import {List} from 'immutable';
+import {Constituent, ConstituentRecordFactory} from './Constituent';
 import {Adverb, AdverbFactory} from './Adverb';
 
-const AdverbPhraseRecord = Record({
+const AdverbPhraseRecord = ConstituentRecordFactory({
     adverb: null // Adverb
 });
 

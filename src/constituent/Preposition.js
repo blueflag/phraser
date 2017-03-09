@@ -1,8 +1,7 @@
-import {Record} from 'immutable';
-import Constituent from './Constituent';
+import {Constituent, ConstituentRecordFactory} from './Constituent';
 import {CheckType} from '../decls/TypeErrors';
 
-const PrepositionRecord = Record({
+const PrepositionRecord = ConstituentRecordFactory({
     preposition: ""
 });
 

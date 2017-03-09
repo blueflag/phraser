@@ -11,6 +11,7 @@ const {
     Det,
     N,
     NP,
+    P,
     PP,
     V,
     VP
@@ -36,7 +37,6 @@ const filters: Object = {
 
 // ADD ALL PHRASES!!
 // USE FILTERS IN PHRASES!!!
-// ADD COMMAS!!!!
 
 export default () => {
     var sentences = [];
@@ -114,7 +114,9 @@ export default () => {
                         null,
                         VP("has"),
                         NP("20%").modifier(PP("of", NP("total views").the()))
-                    ).whDeterminer("which")
+                    )
+                    .whDeterminer("which")
+                    .appendPrevious(",")
                 )
         );
     });
@@ -129,7 +131,7 @@ export default () => {
             )
                 .present()
                 .modifier(
-                    PP("from", NP("bowl").a()).appendPrevious(",")
+                    PP(P("from").appendPrevious(","), NP("bowl").a())
                 )
         );
     });
@@ -143,7 +145,7 @@ export default () => {
     sentences.push(() => {
         return Sentence(
             NP("fire")
-        );
+        ).append("?")
     });
 
     sentences.push(() => {
@@ -152,6 +154,8 @@ export default () => {
             Clause(null, "are", NP("you")).whAdverb("how")
         );
     });
+
+    /*
 
     sentences.push('<h2>Verb tests</h2>');
 
@@ -210,11 +214,14 @@ export default () => {
         });
     });
 
+    */
+
     const things = sentences.map((ii, kk) => {
         if(typeof ii == "function") {
             const sentence = ii();
 
             console.log(
+                sentence,
                 sentence.flatten(),
                 sentence.render(),
                 sentence.renderString()

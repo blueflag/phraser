@@ -1,8 +1,8 @@
-import {List, Record} from 'immutable';
-import Constituent from './Constituent';
+import {List} from 'immutable';
+import {Constituent, ConstituentRecordFactory} from './Constituent';
 import {CheckType} from '../decls/TypeErrors';
 
-const DeterminerRecord = Record({
+const DeterminerRecord = ConstituentRecordFactory({
     determiner: "",
     quantity: null
 });

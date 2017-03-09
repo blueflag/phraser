@@ -1,8 +1,8 @@
-import {List, Record} from 'immutable';
-import Constituent from './Constituent';
+import {List} from 'immutable';
+import {Constituent, ConstituentRecordFactory} from './Constituent';
 import {Adjective, AdjectiveFactory} from './Adjective';
 
-const AdjectivePhraseRecord = Record({
+const AdjectivePhraseRecord = ConstituentRecordFactory({
     adjective: null // Adjective
 });
 

@@ -1,9 +1,10 @@
-import {List, Record} from 'immutable';
-import Constituent from './Constituent';
+import {List} from 'immutable';
+import {Constituent, ConstituentRecordFactory} from './Constituent';
 import {firstToUpper} from '../utils/String';
 
-const SentenceRecord = Record({
-    sentence: List()
+const SentenceRecord = ConstituentRecordFactory({
+    sentence: List(),
+    append: List(["."])
 });
 
 class Sentence extends Constituent {
@@ -21,11 +22,10 @@ class Sentence extends Constituent {
         return new Sentence(...args);
     }
 
-    _flattenSelf(context: Map<string, any>): List<Constituent|string> {
+    _flattenSelf(context: Map<string, any>): List<Constituent> {
         return this._flattenChildren([
-            this.data.sentence,
-            "."
-        ], context);
+            this.data.sentence
+        ], context); // firstToUpper
     }
 
 }
