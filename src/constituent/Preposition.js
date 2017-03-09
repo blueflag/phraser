@@ -17,6 +17,10 @@ class Preposition extends Constituent {
         return typeof obj == "object" && obj instanceof Preposition;
     }
 
+    _clone(...args: any): Preposition {
+        return new Preposition(...args);
+    }
+
     _renderSelf(): string {
         return this.data.preposition;
     }

@@ -2,10 +2,10 @@ import {Map, List} from 'immutable';
 
 class Constituent {
 
-    constructor(data: Map<string, any>, lexicon: Object = {}) {
+    constructor(data: Map<string, any>, lexicon: Object = {}, meta: Object = Map()) {
         this.data = data;
         this.lexicon = lexicon;
-        this.meta = null;
+        this.meta = meta;
         this.types = [];
     }
 
@@ -13,18 +13,35 @@ class Constituent {
         return typeof obj == "object" && obj instanceof Constituent;
     }
 
-    _flattenChildren(children: Array<Constituent|string|null|List<Constituent|string|null>>, context: Map<string, any> = Map()): List {
+    _clone(...args: any): Constituent {
+        return new Constituent(...args);
+    }
+
+    _flattenChildren(children: Array<Constituent|string|null|List<Constituent|string|null>>, context: Map<string, any> = Map()): List<Constituent|string> {
         return List(children)
+            // children are often Lists themselves, flatten them one level
             .flatten(true)
+            // remove any empty strings / null values
             .filter(ii => ii)
+            // call _flattenSelf() on any items that have it and use the resulting List
             .reduce((list: List<Constituent|string|null>, item: Constituent|string|null): List<Constituent|string> => {
-                const flattened: List = typeof item == "object" && item.flatten
+                const flattened: List = typeof item == "object" && item._flattenSelf
                     ? item._flattenSelf(context)
                     : List([item]);
 
                 return list.concat(flattened);
             }, List())
-            .filter(ii => ii);
+            // again remove any empty strings / null values
+            .filter(ii => ii)
+            // merge meta into children
+            .map((item: Constituent|string): Constituent|string => {
+                if(!Constituent.isConstituent(item)) {
+                    return item;
+                }
+                return item.clone({
+                    meta: this.meta.merge(item.meta)
+                });
+            });
     }
 
     _flattenSelf(context: Map<string, any>): List<Constituent|string> {
@@ -35,11 +52,19 @@ class Constituent {
         return "...";
     }
 
-    flatten(): List {
+    clone(override: Object = {}): Constituent {
+        return this._clone(
+            override.data || this.data,
+            override.lexicon || this.lexicon,
+            override.meta || this.meta
+        );
+    }
+
+    flatten(): List<Constituent|string> {
         return this._flattenSelf(Map());
     }
 
-    render(): List {
+    render(): List<string> {
         return this.flatten()
             .reduce((list: List<string>, item: List<string>|string): List<string> => {
                 if(typeof item == "string") {
@@ -56,8 +81,10 @@ class Constituent {
         return this.render().join(" ");
     }
 
-    meta(meta: any) {
-        this.meta = meta;
+    setMeta(key: string, value: any): Constituent {
+        return this.clone({
+            meta: this.meta.set(key, value)
+        });
     }
 }
 

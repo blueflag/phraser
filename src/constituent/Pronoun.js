@@ -17,6 +17,10 @@ class Pronoun extends Constituent {
         return typeof obj == "object" && obj instanceof Pronoun;
     }
 
+    _clone(...args: any): Pronoun {
+        return new Pronoun(...args);
+    }
+
     _renderSelf(): string {
         return this.data.pronoun;
     }

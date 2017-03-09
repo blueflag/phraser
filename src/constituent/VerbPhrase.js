@@ -19,6 +19,10 @@ class VerbPhrase extends Constituent {
         return typeof obj == "object" && obj instanceof VerbPhrase;
     }
 
+    _clone(...args: any): VerbPhrase {
+        return new VerbPhrase(...args);
+    }
+
     _flattenSelf(context: Map<string, any>): List<Constituent|string> {
         const {
             tense,
@@ -75,9 +79,9 @@ class VerbPhrase extends Constituent {
     // TODO adverbs have positions
 
     adverb(adv: Adverb|string): VerbPhrase {
-        return new VerbPhrase(
-            this.data.update('adverbs', advs => advs.push(AdverbFactory(adv)))
-        );
+        return this.clone({
+            data: this.data.update('adverbs', advs => advs.push(AdverbFactory(adv)))
+        });
     }
 
     adv(adv: Adverb|string): VerbPhrase {

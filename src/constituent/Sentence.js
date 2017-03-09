@@ -17,6 +17,10 @@ class Sentence extends Constituent {
         return typeof obj == "object" && obj instanceof Sentence;
     }
 
+    _clone(...args: any): Sentence {
+        return new Sentence(...args);
+    }
+
     _flattenSelf(context: Map<string, any>): List<Constituent|string> {
         return this._flattenChildren([
             this.data.sentence,

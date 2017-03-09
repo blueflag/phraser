@@ -17,6 +17,10 @@ class AdjectivePhrase extends Constituent {
         return typeof obj == "object" && obj instanceof AdjectivePhrase;
     }
 
+    _clone(...args: any): AdjectivePhrase {
+        return new AdjectivePhrase(...args);
+    }
+
     _flattenSelf(context: Map<string, any>): List<Constituent|string> {
         return this._flattenChildren([
             this.data.adjective

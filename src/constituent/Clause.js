@@ -34,6 +34,10 @@ class Clause extends Constituent {
         return typeof obj == "object" && obj instanceof Clause;
     }
 
+    _clone(...args: any): Clause {
+        return new Clause(...args);
+    }
+
     _flattenSelf(context: Map<string, any>): List<Constituent|string> {
         const {
             tense,
@@ -80,47 +84,46 @@ class Clause extends Constituent {
 
     modifier(modifier: PrepositionalPhrase|string): Clause {
         CheckType(modifier, ["Modifier"]);
-        return new Clause(
-            this.data.update('modifiers', modifiers => modifiers.push(modifier)) // TODO cast this
-        );
+        return this.clone({
+            data: this.data.update('modifiers', modifiers => modifiers.push(modifier))
+        });
     }
 
     whAdverb(whAdverb: Adverb|string): Clause {
         CheckType(whAdverb, ['Adverb', 'string']);
-        return new Clause(
-            this.data
+        return this.clone({
+            data: this.data
                 .set('whAdverb', AdverbFactory(whAdverb))
                 .set('whDeterminer', '')
                 .set('whPronoun', '')
-        );
+        });
     }
 
     whDeterminer(whDeterminer: Determiner|string): Clause {
         CheckType(whDeterminer, ['Determiner', 'string']);
-        return new Clause(
-            this.data
+        return this.clone({
+            data: this.data
                 .set('whAdverb', '')
                 .set('whDeterminer', DeterminerFactory(whDeterminer))
                 .set('whPronoun', '')
-        );
+        });
     }
 
     whPronoun(whPronoun: Pronoun|string): Clause {
         CheckType(whPronoun, ['Pronoun', 'string']);
-        return new Clause(
-            this.data
+        return this.clone({
+            data: this.data
                 .set('whDeterminer', '')
                 .set('whAdverb', '')
                 .set('whPronoun', PronounFactory(whPronoun))
-        );
+        });
     }
 
     tense(tense: string): Clause {
         CheckEnum(tense, TENSE_ENUM);
-        return new Clause(
-            this.data.set('tense', tense),
-            this.lexicon
-        );
+        return this.clone({
+            data: this.data.set('tense', tense)
+        });
     }
 
     past(): Clause {

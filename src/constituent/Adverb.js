@@ -17,6 +17,10 @@ class Adverb extends Constituent {
         return typeof obj == "object" && obj instanceof Adverb;
     }
 
+    _clone(...args: any): Adverb {
+        return new Adverb(...args);
+    }
+
     _renderSelf(): string {
         return this.data.adverb;
     }

@@ -9,6 +9,7 @@ const {
     Sentence,
     AdjP,
     Det,
+    N,
     NP,
     PP,
     V,
@@ -35,7 +36,6 @@ const filters: Object = {
 
 // ADD ALL PHRASES!!
 // USE FILTERS IN PHRASES!!!
-// MAKE WRAPPER COMPONENT TO REPLACE WORDMETA!!!!
 // ADD COMMAS!!!!
 
 export default () => {
@@ -47,19 +47,20 @@ export default () => {
 
     sentences.push(() => {
         const comparisonNoun = NP("suburb")
+            .setMeta("BBB", "BBB")
             .plural()
             .det("all") // ALL, BOTH etc
             .modifier(PP("in", "Victoria"));
 
         return Sentence(
             Clause(
-                "Richmond",
+                NP(N("Richmond")),
                 "rank",
                 AdjP("4th") // TODO some kind of helper class that can use numeral and turn numbers to ordered numbers
             )
                 .present()
                 .modifier(PP("for", "supply and demand metrics"))
-                .modifier(Clause(comparisonNoun, VP("is"), AdjP("compared")).whAdverb("when"))
+                .modifier(Clause(comparisonNoun, VP("is"), AdjP("compared")).whAdverb("when").setMeta("AAA", "AAA"))
         );
     });
 

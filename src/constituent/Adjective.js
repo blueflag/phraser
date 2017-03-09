@@ -17,6 +17,10 @@ class Adjective extends Constituent {
         return typeof obj == "object" && obj instanceof Adjective;
     }
 
+    _clone(...args: any): Adjective {
+        return new Adjective(...args);
+    }
+
     _renderSelf(): string {
         return this.data.adjective;
     }

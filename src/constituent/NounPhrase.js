@@ -20,17 +20,13 @@ class NounPhrase extends Constituent {
         this.types = ["NounPhrase"];
     }
 
-    //
-    // static methods
-    //
-
     static isNounPhrase(obj: any): boolean {
         return typeof obj == "object" && obj instanceof NounPhrase;
     }
 
-    //
-    // internal methods
-    //
+    _clone(...args: any): NounPhrase {
+        return new NounPhrase(...args);
+    }
 
     _flattenSelf(context: Map<string, any>): List<Constituent|string> {
         var {
@@ -67,10 +63,9 @@ class NounPhrase extends Constituent {
     // "7" dogs
 
     determiner(determiner: Determiner|string): NounPhrase {
-        return new NounPhrase(
-            this.data.set('determiner', DeterminerFactory(determiner)),
-            this.lexicon
-        );
+        return this.clone({
+            data: this.data.set('determiner', DeterminerFactory(determiner))
+        });
     }
 
     det(determiner: Determiner|string): NounPhrase {
@@ -91,10 +86,9 @@ class NounPhrase extends Constituent {
 
     number(number: string): NounPhrase {
         CheckEnum(number, NUMBER_ENUM);
-        return new NounPhrase(
-            this.data.set('noun', this.data.noun.number(number)),
-            this.lexicon
-        );
+        return this.clone({
+            data: this.data.set('noun', this.data.noun.number(number))
+        });
     }
 
     plural(): NounPhrase {
@@ -115,10 +109,9 @@ class NounPhrase extends Constituent {
 
     person(person: string): NounPhrase {
         CheckEnum(person, PERSON_ENUM);
-        return new NounPhrase(
-            this.data.set('noun', this.data.noun.person(person)),
-            this.lexicon
-        );
+        return this.clone({
+            data: this.data.set('noun', this.data.noun.person(person))
+        });
     }
 
     firstPerson(): NounPhrase {
@@ -141,10 +134,9 @@ class NounPhrase extends Constituent {
     // "fat" dog
 
     adjective(adj: Adjective|string): NounPhrase {
-        return new NounPhrase(
-            this.data.update('adjectives', adjs => adjs.push(AdjectiveFactory(adj))),
-            this.lexicon
-        );
+        return this.clone({
+            data: this.data.update('adjectives', adjs => adjs.push(AdjectiveFactory(adj)))
+        });
     }
 
     adj(adj: Adjective|string): NounPhrase {
@@ -167,9 +159,9 @@ class NounPhrase extends Constituent {
 
     modifier(modifier: any): NounPhrase {
         CheckType(modifier, ["Modifier"]);
-        return new NounPhrase(
-            this.data.update('modifiers', modifiers => modifiers.push(modifier))
-        );
+        return this.clone({
+            data: this.data.update('modifiers', modifiers => modifiers.push(modifier))
+        });
     }
 
     //TODO: complements(), such as "the student OF PHYSICS". Complements can't be placed after modifiers (adjuncts)

@@ -22,17 +22,13 @@ const NounRecord = Record({
 
 class Noun extends Constituent {
 
-    //
-    // static methods
-    //
-
     static isNoun(obj: any): boolean {
         return typeof obj == "object" && obj instanceof Noun;
     }
 
-    //
-    // internal methods
-    //
+    _clone(...args: any): Noun {
+        return new Noun(...args);
+    }
 
     _flattenSelf(context: Map<string, any>): List<Constituent|string> {
 
@@ -40,10 +36,7 @@ class Noun extends Constituent {
         const data: NounRecord = this.data
             .update('number', ownNumber => context.get('number') || ownNumber);
 
-        return new Noun(
-            data,
-            this.lexicon
-        );
+        return this.clone({data});
     }
 
     _renderSelf(): string {
@@ -71,10 +64,9 @@ class Noun extends Constituent {
 
     number(number: string): Noun {
         CheckEnum(number, NUMBER_ENUM);
-        return new Noun(
-            this.data.set('number', number),
-            this.lexicon
-        );
+        return this.clone({
+            data: this.data.set('number', number)
+        });
     }
 
     plural(): Noun {
@@ -95,10 +87,9 @@ class Noun extends Constituent {
 
     person(person: string): Noun {
         CheckEnum(person, PERSON_ENUM);
-        return new Noun(
-            this.data.set('person', person),
-            this.lexicon
-        );
+        return this.clone({
+            data: this.data.set('person', person)
+        });
     }
 
     firstPerson(): Noun {

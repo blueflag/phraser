@@ -17,6 +17,10 @@ class Conjunction extends Constituent {
         return typeof obj == "object" && obj instanceof Conjunction;
     }
 
+    _clone(...args: any): Conjunction {
+        return new Conjunction(...args);
+    }
+
     _renderSelf(): string {
         return this.data.conjunction;
     }

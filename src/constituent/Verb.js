@@ -35,6 +35,10 @@ class Verb extends Constituent {
         return typeof obj == "object" && obj instanceof Verb;
     }
 
+    _clone(...args: any): Verb {
+        return new Verb(...args);
+    }
+
     _flattenSelf(context: Map<string, any>): List {
 
         // override tense and aspect from context if it exists
@@ -80,10 +84,9 @@ class Verb extends Constituent {
 
     tense(tense: string): Verb {
         CheckEnum(tense, TENSE_ENUM);
-        return new Verb(
-            this.data.set('tense', tense),
-            this.lexicon
-        );
+        return this.clone({
+            data: this.data.set('tense', tense)
+        });
     }
 
     past(): Verb {
@@ -108,10 +111,9 @@ class Verb extends Constituent {
 
     aspect(aspect: string): Verb {
         CheckEnum(aspect, ASPECT_ENUM);
-        return new Verb(
-            this.data.set('aspect', aspect),
-            this.lexicon
-        );
+        return this.clone({
+            data: this.data.set('aspect', aspect)
+        });
     }
 
     simple(): Verb {

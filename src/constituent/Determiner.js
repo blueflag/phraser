@@ -13,6 +13,10 @@ class Determiner extends Constituent {
         return typeof obj == "object" && obj instanceof Determiner;
     }
 
+    _clone(...args: any): Determiner {
+        return new Determiner(...args);
+    }
+
     _renderSelf(): List {
         return List()
             .push(this.data.determiner)
@@ -25,9 +29,9 @@ class Determiner extends Constituent {
 
     quantity(quantity: number): Determiner {
         CheckType(quantity, ["number"]);
-        return new Determiner(
-            this.data.set('quantity', quantity)
-        );
+        return this.clone({
+            data: this.data.set('quantity', quantity)
+        });
     }
 }
 
