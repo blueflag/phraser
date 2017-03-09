@@ -1,13 +1,15 @@
 import {Record, Map, List} from 'immutable';
+import {firstToUpper} from '../utils/String';
 
 const ConstituentRecordFactory = (initialValues: Object): Record => {
     const defaultValues: Object = {
-        text: "",
         prepend: List(),
         append: List(),
         appendPrevious: List(),
         prependNext: List(),
-        meta: Map()
+        meta: Map(),
+        text: "",
+        first: false
     };
 
     return Record(Object.assign({}, defaultValues, initialValues));
@@ -121,7 +123,7 @@ class Constituent {
                 return item;
             })
             // add spaces
-            .interpose(ArbitraryStringFactory(" ")); // needs to set mets where two neigbours also have the same meta
+            .interpose(ArbitraryStringFactory(" "));
     }
 
     render(): List<Object> {
@@ -132,15 +134,23 @@ class Constituent {
                     ? rendered.join(" ")
                     : rendered;
 
-                text = item.data.prepend.join("") + text + item.data.append.join("");
+                if(item.data.first) {
+                    text = firstToUpper(text);
+                }
 
-                return text;
+                text = item.data.prepend.join("") + text + item.data.append.join("");
+                const {meta} = item.data;
+
+                return Map({
+                    text,
+                    meta
+                });
             });
     }
 
     renderString(): string {
         return this.render()
-            //.map(ii => ii.get('text'))
+            .map(ii => ii.get('text'))
             .join("");
     }
 

@@ -110,7 +110,7 @@ export default () => {
                 NP("house")
             )
                 .modifier(
-                    Clause( // TODO add a comma
+                    Clause(
                         null,
                         VP("has"),
                         NP("20%").modifier(PP("of", NP("total views").the()))
@@ -221,7 +221,6 @@ export default () => {
             const sentence = ii();
 
             console.log(
-                sentence,
                 sentence.flatten(),
                 sentence.render(),
                 sentence.renderString()

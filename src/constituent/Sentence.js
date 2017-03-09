@@ -1,6 +1,5 @@
 import {List} from 'immutable';
 import {Constituent, ConstituentRecordFactory} from './Constituent';
-import {firstToUpper} from '../utils/String';
 
 const SentenceRecord = ConstituentRecordFactory({
     sentence: List(),
@@ -25,7 +24,12 @@ class Sentence extends Constituent {
     _flattenSelf(context: Map<string, any>): List<Constituent> {
         return this._flattenChildren([
             this.data.sentence
-        ], context); // firstToUpper
+        ], context)
+            .update(0, (item: Constituent): Constituent => {
+                return item.clone({
+                    data: item.data.set('first', true)
+                });
+            });
     }
 
 }
