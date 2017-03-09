@@ -9,6 +9,11 @@ const DeterminerRecord = Record({
 
 class Determiner extends Constituent {
 
+    constructor(...args: any) {
+        super(...args);
+        this.types = ["Determiner"];
+    }
+
     static isDeterminer(obj: any): boolean {
         return typeof obj == "object" && obj instanceof Determiner;
     }

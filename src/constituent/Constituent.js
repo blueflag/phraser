@@ -81,6 +81,47 @@ class Constituent {
         return this.render().join(" ");
     }
 
+    // TODO check types without causing a dependency loop
+
+    prepend(item: Punctuation|string): Constituent {
+        return this.clone({
+            data: this.data.set("prepend", item)
+        });
+    }
+
+    append(item: Punctuation|string): Constituent {
+        return this.clone({
+            data: this.data.set("append", item)
+        });
+    }
+
+    wrap(startOrBoth: Punctuation|string, end: Punctuation|string): Constituent {
+        if(!end) {
+            return this.clone({
+                data: this.data
+                    .set("prepend", startOrBoth)
+                    .set("append", startOrBoth)
+            });
+        }
+        return this.clone({
+            data: this.data
+                .set("prepend", startOrBoth)
+                .set("append", end)
+        });
+    }
+
+    appendPrevious(item: Punctuation|string): Constituent {
+        return this.clone({
+            data: this.data.set("appendPrevious", item)
+        });
+    }
+
+    prependNext(item: Punctuation|string): Constituent {
+        return this.clone({
+            data: this.data.set("prependNext", item)
+        });
+    }
+
     setMeta(key: string, value: any): Constituent {
         return this.clone({
             meta: this.meta.set(key, value)

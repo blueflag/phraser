@@ -22,6 +22,11 @@ const NounRecord = Record({
 
 class Noun extends Constituent {
 
+    constructor(...args: any) {
+        super(...args);
+        this.types = ["Noun"];
+    }
+
     static isNoun(obj: any): boolean {
         return typeof obj == "object" && obj instanceof Noun;
     }

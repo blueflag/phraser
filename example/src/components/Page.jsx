@@ -119,6 +119,40 @@ export default () => {
         );
     });
 
+    sentences.push('<h2>Punctuation tests</h2>');
+    sentences.push(() => {
+        return Sentence(
+            Clause(
+                NP("dog").the(),
+                VP("eat"),
+                NP("food")
+            )
+                .present()
+                .modifier(
+                    PP("from", NP("bowl").a()).appendPrevious(",")
+                )
+        );
+    });
+
+    sentences.push(() => {
+        return Sentence(
+            NP("fire")
+        );
+    });
+
+    sentences.push(() => {
+        return Sentence(
+            NP("fire")
+        );
+    });
+
+    sentences.push(() => {
+        return Sentence(
+            NP("hello"),
+            Clause(null, "are", NP("you")).whAdverb("how")
+        );
+    });
+
     sentences.push('<h2>Verb tests</h2>');
 
     const baseVerb = V('jump');
@@ -179,7 +213,13 @@ export default () => {
     const things = sentences.map((ii, kk) => {
         if(typeof ii == "function") {
             const sentence = ii();
-            console.log(sentence.flatten(), sentence.render(), sentence.renderString());
+
+            console.log(
+                sentence.flatten(),
+                sentence.render(),
+                sentence.renderString()
+            );
+
             return <h3 style={{margin: '0 0 5rem'}} key={kk}>{sentence.renderString()}</h3>
         }
         return <span key={kk} dangerouslySetInnerHTML={{__html: ii}} />;
