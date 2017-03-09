@@ -41,11 +41,13 @@ class Determiner extends Constituent {
 }
 
 const DeterminerFactory = (determiner: Determiner|string): Determiner => {
-    CheckType(determiner, [Determiner, "string"]);
+    CheckType(determiner, [Determiner, "string", "undefined", "null"]);
     if(Determiner.isDeterminer(determiner)) {
         return determiner;
     }
-    return new Determiner(DeterminerRecord({determiner}));
+    return new Determiner(DeterminerRecord({
+        determiner: determiner || ""
+    }));
 };
 
 export {

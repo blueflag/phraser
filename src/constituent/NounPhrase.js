@@ -35,6 +35,11 @@ class NounPhrase extends Constituent {
             modifiers
         } = this.data;
 
+        // never use person or number from context
+        context = context
+            .delete('person')
+            .delete('number');
+
         // set noun pluralization based off determiner's quantity
         if(noun && determiner) {
             const {quantity} = determiner.data;
@@ -79,6 +84,15 @@ class NounPhrase extends Constituent {
         return this.determiner('a');
     }
 
+    quantity(quantity: number): NounPhrase {
+        if(!this.data.determiner) {
+            return this.determiner(DeterminerFactory("").quantity(quantity));
+        }
+        return this.clone({
+            data: this.data.update('determiner', det => det.quantity(quantity))
+        });
+    }
+
     //
     // noun methods
     //
@@ -86,7 +100,7 @@ class NounPhrase extends Constituent {
     number(number: string): NounPhrase {
         CheckEnum(number, NUMBER_ENUM);
         return this.clone({
-            data: this.data.set('noun', this.data.noun.number(number))
+            data: this.data.update('noun', noun => noun.number(number))
         });
     }
 
@@ -109,7 +123,7 @@ class NounPhrase extends Constituent {
     person(person: string): NounPhrase {
         CheckEnum(person, PERSON_ENUM);
         return this.clone({
-            data: this.data.set('noun', this.data.noun.person(person))
+            data: this.data.update('noun', noun => noun.person(person))
         });
     }
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import {Constituent} from 'phraser';
 import Lexicon from './Lexicon';
-import {List} from 'immutable';
+import {Map} from 'immutable';
 
 const {
     Clause,
@@ -47,20 +47,19 @@ export default () => {
 
     sentences.push(() => {
         const comparisonNoun = NP("suburb")
-            .setMeta("BBB", "BBB")
             .plural()
             .det("all") // ALL, BOTH etc
             .modifier(PP("in", "Victoria"));
 
         return Sentence(
             Clause(
-                NP(N("Richmond")),
+                NP("Richmond").setMeta("style", {color: "#6666FF"}),
                 "rank",
                 AdjP("4th") // TODO some kind of helper class that can use numeral and turn numbers to ordered numbers
             )
                 .present()
                 .modifier(PP("for", "supply and demand metrics"))
-                .modifier(Clause(comparisonNoun, VP("is"), AdjP("compared")).whAdverb("when").setMeta("AAA", "AAA"))
+                .modifier(Clause(comparisonNoun, VP("is"), AdjP("compared")).whAdverb("when").setMeta("style", {color: "#999999"}))
         );
     });
 
@@ -226,7 +225,10 @@ export default () => {
                 sentence.renderString()
             );
 
-            return <h3 style={{margin: '0 0 5rem'}} key={kk}>{sentence.renderString()}</h3>
+            const elems = sentence.render()
+                .map(ii => <span style={ii.getIn(['meta', 'style'], {})}>{ii.get('text')}</span>);
+
+            return <h3 style={{margin: '0 0 5rem'}} key={kk}>{elems}</h3>
         }
         return <span key={kk} dangerouslySetInnerHTML={{__html: ii}} />;
     });
