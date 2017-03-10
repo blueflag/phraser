@@ -19,7 +19,10 @@ const ClauseRecord = ConstituentRecordFactory({
     whAdverb: null, // AdverbPhrase e.g. when, where, why
     whDeterminer: null, // Determiner e.g. that, which
     whPronoun: null, // Pronoun e.g. who, whom, whose
-    modifiers: List(),
+    modifiers: Map({
+        front: List(),
+        end: List()
+    }),
     tense: "",
     aspect: ""
 });
@@ -52,6 +55,7 @@ class Clause extends Constituent {
         });
 
         const flatWh: List<Constituent|string> = this._flattenChildren([
+            this.data.modifiers.get('front'),
             this.data.whDeterminer,
             this.data.whAdverb
         ], context, {hasLast: false});
@@ -71,7 +75,7 @@ class Clause extends Constituent {
         const flatPredicate: List<Constituent|string> = this._flattenChildren([
             this.data.verb,
             this.data.object,
-            this.data.modifiers
+            this.data.modifiers.get('end')
         ], context, {hasFirst: false});
 
         return List()
@@ -82,11 +86,8 @@ class Clause extends Constituent {
 
     // TODO add datives like "Sam gave MARY a present"
 
-    modifier(modifier: any): Clause {
-        CheckType(modifier, ["Modifier"]);
-        return this.clone({
-            data: this.data.update('modifiers', modifiers => modifiers.push(modifier))
-        });
+    modifier(modifier: any, position: string): NounPhrase {
+        return this._modifier(modifier, position);
     }
 
     whAdverb(whAdverb: Adverb|string): Clause {

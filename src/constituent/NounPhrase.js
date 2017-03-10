@@ -1,15 +1,18 @@
-import {List} from 'immutable';
+import {List, Map} from 'immutable';
 import {Constituent, ConstituentRecordFactory} from './Constituent';
 import {AdjectiveFactory} from './Adjective';
 import {DeterminerFactory} from './Determiner';
 import {Noun, NounFactory, NUMBER_ENUM, PERSON_ENUM} from './Noun';
-import {CheckType, CheckEnum} from '../decls/TypeErrors';
+import {CheckEnum} from '../decls/TypeErrors';
 
 const NounPhraseRecord = ConstituentRecordFactory({
     noun: null, // Noun|Pronoun
     determiner: null, // Determiner
     adjectives: List(), // List<Adjective>
-    modifiers: List() // List<PrepositionPhrase>
+    modifiers: Map({
+        front: List(),
+        end: List()
+    })
 });
 
 class NounPhrase extends Constituent {
@@ -49,10 +52,11 @@ class NounPhrase extends Constituent {
         }
 
         return this._flattenChildren([
+            modifiers.get('front'),
             determiner,
             adjectives,
             noun,
-            modifiers
+            modifiers.get('end')
         ], context);
     }
 
@@ -90,6 +94,16 @@ class NounPhrase extends Constituent {
         }
         return this.clone({
             data: this.data.update('determiner', det => det.quantity(quantity))
+        });
+    }
+
+    //
+    // set plural
+    //
+
+    setPlural(plural: string): NounPhrase {
+        return this.clone({
+            data: this.data.update('noun', noun => noun.setPlural(plural))
         });
     }
 
@@ -164,11 +178,8 @@ class NounPhrase extends Constituent {
     // dog "with no collar"
     // dog "under the house"
 
-    modifier(modifier: any): NounPhrase {
-        CheckType(modifier, ["Modifier"]);
-        return this.clone({
-            data: this.data.update('modifiers', modifiers => modifiers.push(modifier))
-        });
+    modifier(modifier: any, position: string): NounPhrase {
+        return this._modifier(modifier, position);
     }
 
     //TODO: complements(), such as "the student OF PHYSICS". Complements can't be placed after modifiers (adjuncts)

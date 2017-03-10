@@ -1,11 +1,20 @@
-import {List} from 'immutable';
+import {List, Map} from 'immutable';
 import {Constituent, ConstituentRecordFactory} from './Constituent';
 import {Verb, VerbFactory} from './Verb';
 import {AdverbFactory} from './Adverb';
+import {CheckType, CheckEnum} from '../decls/TypeErrors';
+
+const ADVERB_POSITION_ENUM = [
+    "middle",
+    "end"
+];
 
 const VerbPhraseRecord = ConstituentRecordFactory({
     verb: null, // Verb
-    adverbs: List() // List<Adverb>
+    adverbs: Map({
+        middle: List(),
+        end: List()
+    })
 });
 
 class VerbPhrase extends Constituent {
@@ -68,19 +77,20 @@ class VerbPhrase extends Constituent {
 
         return this._flattenChildren([
             auxiliaries,
-            this.data.adverbs,
-            this.data.verb
+            this.data.adverbs.get('middle'),
+            this.data.verb,
+            this.data.adverbs.get('end')
         ], context);
     }
 
-
     // "quickly" ran
     // jumped "swiftly"
-    // TODO adverbs have positions
 
-    adverb(adv: Adverb|string): VerbPhrase {
+    adverb(adv: Adverb|string, position: string = "end"): VerbPhrase {
+        CheckType(position, ['string']);
+        CheckEnum(position, ADVERB_POSITION_ENUM);
         return this.clone({
-            data: this.data.update('adverbs', advs => advs.push(AdverbFactory(adv)))
+            data: this.data.updateIn(['adverbs', position], advs => advs.push(AdverbFactory(adv)))
         });
     }
 
@@ -100,5 +110,6 @@ const VerbPhraseFactory = (verb: VerbPhrase|Verb|string): VerbPhrase => {
 
 export {
     VerbPhrase,
-    VerbPhraseFactory
+    VerbPhraseFactory,
+    ADVERB_POSITION_ENUM
 };

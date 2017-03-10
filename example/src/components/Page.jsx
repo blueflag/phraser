@@ -3,6 +3,12 @@ import {Constituent} from 'phraser';
 import Lexicon from './Lexicon';
 import {Map} from 'immutable';
 
+//
+// TODO - verb dictionarry with "has" and somehow use the same logic that is in VerbPhrase for auxiliaries
+// TODO - Series
+//
+
+
 const {
     Clause,
     Paragraph,

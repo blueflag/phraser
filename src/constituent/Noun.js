@@ -14,6 +14,7 @@ const PERSON_ENUM = [
 
 const NounRecord = ConstituentRecordFactory({
     noun: "",
+    plural: "",
     number: "singular",
     person: "third"
 });
@@ -45,6 +46,7 @@ class Noun extends Constituent {
     _renderSelf(): string {
         var {
             noun,
+            plural,
             number,
             person
         } = this.data;
@@ -56,9 +58,19 @@ class Noun extends Constituent {
             return "you";
         }
         if(number == "plural") {
-            noun += "s";
+            noun = plural || `${noun}s`;
         }
         return noun;
+    }
+
+    //
+    // set plural
+    //
+
+    setPlural(plural: string): Noun {
+        return this.clone({
+            data: this.data.set('plural', plural)
+        });
     }
 
     //

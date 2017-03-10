@@ -1,5 +1,11 @@
 import {Record, Map, List} from 'immutable';
+import {CheckType, CheckEnum} from '../decls/TypeErrors';
 import {firstToUpper} from '../utils/String';
+
+const MODIFIER_POSITION_ENUM = [
+    "front",
+    "end"
+];
 
 const ConstituentRecordFactory = (initialValues: Object): Record => {
     const defaultValues: Object = {
@@ -86,6 +92,19 @@ class Constituent {
         return "...";
     }
 
+    _modifier(modifier: Modifier, position: string = "end"): Constituent {
+        CheckType(modifier, ["Modifier"]);
+        CheckEnum(position, MODIFIER_POSITION_ENUM);
+
+        if(position == "front") {
+            modifier = modifier.after(",");
+        }
+
+        return this.clone({
+            data: this.data.updateIn(['modifiers', position], modifiers => modifiers.push(modifier))
+        });
+    }
+
     clone(override: Object = {}): Constituent {
         return this._clone(
             override.data || this.data,
@@ -128,7 +147,7 @@ class Constituent {
 
     render(): List<Object> {
         return this.flatten()
-            .map((item: Constituent): List<Object> => {
+            .reduce((list: List<Object>, item: Constituent): List<Object> => {
                 const rendered: string|List<string> = item._renderSelf();
                 var text: string = List.isList(rendered)
                     ? rendered.join(" ")
@@ -138,14 +157,30 @@ class Constituent {
                     text = firstToUpper(text);
                 }
 
-                text = item.data.before.join("") + text + item.data.after.join("");
                 const {meta} = item.data;
+                const before: string = item.data.before.join("");
+                const after: string = item.data.after.join("");
 
-                return Map({
+                var add: List<Object> = List();
+                if(before) {
+                    add = add.push(Map({
+                        text: before
+                    }));
+                }
+
+                add = add.push(Map({
                     text,
                     meta
-                });
-            });
+                }));
+
+                if(after) {
+                    add = add.push(Map({
+                        text: after
+                    }));
+                }
+
+                return list.concat(add);
+            }, List());
     }
 
     renderString(): string {
@@ -154,21 +189,19 @@ class Constituent {
             .join("");
     }
 
-    // TODO check types without causing a dependency loop
-
-    before(item: Punctuation|string): Constituent {
+    before(item: Constituent|string): Constituent {
         return this.clone({
             data: this.data.set("before", List([item]))
         });
     }
 
-    after(item: Punctuation|string): Constituent {
+    after(item: Constituent|string): Constituent {
         return this.clone({
             data: this.data.set("after", List([item]))
         });
     }
 
-    wrap(startOrBoth: Punctuation|string, end: Punctuation|string): Constituent {
+    wrap(startOrBoth: Constituent|string, end: Constituent|string): Constituent {
         if(!end) {
             return this.clone({
                 data: this.data
@@ -183,13 +216,13 @@ class Constituent {
         });
     }
 
-    afterPrevious(item: Punctuation|string): Constituent {
+    afterPrevious(item: Constituent|string): Constituent {
         return this.clone({
             data: this.data.set("afterPrevious", List([item]))
         });
     }
 
-    beforeNext(item: Punctuation|string): Constituent {
+    beforeNext(item: Constituent|string): Constituent {
         return this.clone({
             data: this.data.set("beforeNext", List([item]))
         });
@@ -239,5 +272,6 @@ export {
     Constituent,
     ConstituentRecordFactory,
     ArbitraryString,
-    ArbitraryStringFactory
+    ArbitraryStringFactory,
+    MODIFIER_POSITION_ENUM
 };
