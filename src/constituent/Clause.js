@@ -1,24 +1,25 @@
-import {List, Map, Record} from 'immutable';
+import {List, Map} from 'immutable';
 import {Constituent, ConstituentRecordFactory} from './Constituent';
 import {CheckType, CheckEnum} from '../decls/TypeErrors';
 import {Adjective} from './Adjective';
 import {AdjectivePhrase} from './AdjectivePhrase';
 import {Adverb, AdverbFactory} from './Adverb';
+import {AdverbPhrase} from './AdverbPhrase';
 import {Determiner, DeterminerFactory} from './Determiner';
 import {Noun} from './Noun';
-import {NounPhrase, NounPhraseFactory} from './NounPhrase';
+import {NounPhrase} from './NounPhrase';
 import {Pronoun, PronounFactory} from './Pronoun';
 import {Verb, TENSE_ENUM, ASPECT_ENUM} from './Verb';
-import {VerbPhrase, VerbPhraseFactory} from './VerbPhrase';
+import {VerbPhrase} from './VerbPhrase';
 
 const ClauseRecord = ConstituentRecordFactory({
     subject: null, // ?NounPhrase
     verb: null, // VerbPhrase
     object: null, // ?Clause|NounPhrase|AdjectivePhrase|string
+    whAdverb: null, // AdverbPhrase e.g. when, where, why
+    whDeterminer: null, // Determiner e.g. that, which
+    whPronoun: null, // Pronoun e.g. who, whom, whose
     modifiers: List(),
-    whAdverb: "", // e.g. when, where, why
-    whDeterminer: "", // e.g. that, which
-    whPronoun: "", // e.g. who, whom, whose
     tense: "",
     aspect: ""
 });
@@ -45,9 +46,8 @@ class Clause extends Constituent {
         } = this.data;
 
         // this is a new clause with its own context
-        // tense should default to the tense provided through context
         context = Map({
-            tense: tense || context.get('tense'),
+            tense,
             aspect
         });
 
@@ -82,7 +82,7 @@ class Clause extends Constituent {
 
     // TODO add datives like "Sam gave MARY a present"
 
-    modifier(modifier: PrepositionalPhrase|string): Clause {
+    modifier(modifier: any): Clause {
         CheckType(modifier, ["Modifier"]);
         return this.clone({
             data: this.data.update('modifiers', modifiers => modifiers.push(modifier))
@@ -168,7 +168,7 @@ class Clause extends Constituent {
 }
 
 const ClauseFactory = (
-    subjectOrClause: Clause|NounPhrase|Noun|string|null,
+    subjectOrClause: Clause|NounPhrase|AdverbPhrase|Determiner|null,
     verb: VerbPhrase|Verb|string,
     object: ?Clause|NounPhrase|Noun|AdjectivePhrase|Adjective
 ): Clause => {
@@ -177,15 +177,43 @@ const ClauseFactory = (
         return subjectOrClause;
     }
 
-    // enforce that the object to already has its final type
-    CheckType(object, ['NounPhrase', 'AdjectivePhrase', "null", "undefined"]);
+    CheckType(subjectOrClause, ['NounPhrase', 'AdverbPhrase', 'Determiner', 'Pronoun', 'null']);
+    CheckType(verb, ['VerbPhrase']);
+    CheckType(object, ['NounPhrase', 'AdjectivePhrase', 'null', 'undefined']);
+    object = object || null;
+
+    if(AdverbPhrase.isAdverbPhrase(subjectOrClause)) {
+        return new Clause(ClauseRecord({
+            whAdverb: subjectOrClause,
+            verb,
+            object
+        }));
+    }
+
+    if(Determiner.isDeterminer(subjectOrClause)) {
+        return new Clause(ClauseRecord({
+            whDeterminer: subjectOrClause,
+            verb,
+            object
+        }));
+    }
+
+    if(Pronoun.isPronoun(subjectOrClause)) {
+        return new Clause(ClauseRecord({
+            whPronoun: subjectOrClause,
+            verb,
+            object
+        }));
+    }
 
     return new Clause(ClauseRecord({
-        subject: subjectOrClause && NounPhraseFactory(subjectOrClause),
-        verb: VerbPhraseFactory(verb),
-        object: object || null
+        subject: subjectOrClause,
+        verb,
+        object
     }));
 };
+
+
 
 export {
     Clause,

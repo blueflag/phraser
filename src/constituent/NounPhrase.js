@@ -9,7 +9,7 @@ const NounPhraseRecord = ConstituentRecordFactory({
     noun: null, // Noun|Pronoun
     determiner: null, // Determiner
     adjectives: List(), // List<Adjective>
-    modifiers: List() // List<PrepositionPhrase  TODO: |AdjectiveClause|ParticiplePhrase|Infinitive>
+    modifiers: List() // List<PrepositionPhrase>
 });
 
 class NounPhrase extends Constituent {
@@ -164,12 +164,6 @@ class NounPhrase extends Constituent {
     // dog "with no collar"
     // dog "under the house"
 
-    // Be careful which noun phrase has which modifiers
-    // YouTube showed that THE CAT played the piano in a blue shirt.
-    // YouTube showed THAT THE CAT PLAYED THE PIANO in high definition.
-    // YouTube showed that the cat played the PIANO in the living room.
-    // from http://allthingslinguistic.com/post/102131750573/how-to-draw-a-syntax-tree-part-8-a-step-by-step
-
     modifier(modifier: any): NounPhrase {
         CheckType(modifier, ["Modifier"]);
         return this.clone({
@@ -181,7 +175,7 @@ class NounPhrase extends Constituent {
 
 }
 
-const NounPhraseFactory = (noun: NounPhrase|Noun|string): NounPhrase => {
+const NounPhraseFactory = (noun: NounPhrase|Noun|string|number): NounPhrase => {
     if(NounPhrase.isNounPhrase(noun)) {
         return noun;
     }

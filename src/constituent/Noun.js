@@ -109,12 +109,14 @@ class Noun extends Constituent {
 
 }
 
-const NounFactory = (noun: Noun|string): Noun => {
-    CheckType(noun, [Noun, "string"]);
+const NounFactory = (noun: Noun|string|number): Noun => {
+    CheckType(noun, [Noun, "string", "number"]);
     if(Noun.isNoun(noun)) {
         return noun;
     }
-    return new Noun(NounRecord({noun}));
+    return new Noun(NounRecord({
+        noun: `${noun}`
+    }));
 };
 
 export {

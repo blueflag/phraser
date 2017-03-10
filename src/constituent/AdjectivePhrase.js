@@ -1,9 +1,11 @@
 import {List} from 'immutable';
 import {Constituent, ConstituentRecordFactory} from './Constituent';
 import {Adjective, AdjectiveFactory} from './Adjective';
+import {CheckType} from '../decls/TypeErrors';
 
 const AdjectivePhraseRecord = ConstituentRecordFactory({
-    adjective: null // Adjective
+    adjective: null, // Adjective
+    modifiers: List()
 });
 
 class AdjectivePhrase extends Constituent {
@@ -23,8 +25,16 @@ class AdjectivePhrase extends Constituent {
 
     _flattenSelf(context: Map<string, any>): List<Constituent|string> {
         return this._flattenChildren([
-            this.data.adjective
+            this.data.adjective,
+            this.data.modifiers
         ], context);
+    }
+
+    modifier(modifier: any): Clause {
+        CheckType(modifier, ["Modifier"]);
+        return this.clone({
+            data: this.data.update('modifiers', modifiers => modifiers.push(modifier))
+        });
     }
 }
 

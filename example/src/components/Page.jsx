@@ -33,11 +33,6 @@ const filters: Object = {
     }
 };
 
-// TODO
-
-// ADD ALL PHRASES!!
-// USE FILTERS IN PHRASES!!!
-
 export default () => {
     var sentences = [];
 
@@ -55,7 +50,7 @@ export default () => {
             Clause(
                 NP("Richmond").setMeta("style", {color: "#6666FF"}),
                 "rank",
-                AdjP("4th") // TODO some kind of helper class that can use numeral and turn numbers to ordered numbers
+                AdjP("4th")
             )
                 .present()
                 .modifier(PP("for", "supply and demand metrics"))
@@ -154,8 +149,6 @@ export default () => {
         ).after("?");
     });
 
-    /*
-
     sentences.push('<h2>Verb tests</h2>');
 
     const baseVerb = V('jump');
@@ -212,8 +205,6 @@ export default () => {
             });
         });
     });
-
-    */
 
     const things = sentences.map((ii, kk) => {
         if(typeof ii == "function") {
