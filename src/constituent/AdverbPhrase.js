@@ -1,6 +1,7 @@
 import {List} from 'immutable';
 import {Constituent, ConstituentRecordFactory} from './Constituent';
 import {Adverb, AdverbFactory} from './Adverb';
+import {Series} from './Series';
 
 const AdverbPhraseRecord = ConstituentRecordFactory({
     adverb: null // Adverb
@@ -10,7 +11,7 @@ class AdverbPhrase extends Constituent {
 
     constructor(...args: any) {
         super(...args);
-        this.types = ["AdverbPhrase"];
+        this.types.push("AdverbPhrase");
     }
 
     static isAdverbPhrase(obj: any): boolean {
@@ -33,7 +34,7 @@ const AdverbPhraseFactory = (adverb: AdverbPhrase|Adverb|string): AdverbPhrase =
         return adverb;
     }
     return new AdverbPhrase(AdverbPhraseRecord({
-        adverb: AdverbFactory(adverb)
+        adverb: Series.isSeries(adverb) ? adverb : AdverbFactory(adverb)
     }));
 };
 

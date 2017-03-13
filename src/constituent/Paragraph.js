@@ -9,7 +9,7 @@ class Paragraph extends Constituent {
 
     constructor(...args: any) {
         super(...args);
-        this.types = ["Paragraph"];
+        this.types.push("Paragraph");
     }
 
     static isParagraph(obj: any): boolean {

@@ -31,7 +31,7 @@ class Clause extends Constituent {
 
     constructor(...args: any) {
         super(...args);
-        this.types = ["Clause", "Modifier"];
+        this.types.push("Clause", "Modifier");
     }
 
     static isClause(obj: any): boolean {

@@ -9,7 +9,7 @@ class Conjunction extends Constituent {
 
     constructor(...args: any) {
         super(...args);
-        this.types = ["Conjunction"];
+        this.types.push("Conjunction");
     }
 
     static isConjunction(obj: any): boolean {

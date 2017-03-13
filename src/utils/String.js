@@ -1,7 +1,7 @@
-function firstToUpper(str) {
+function FirstToUpper(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 export {
-    firstToUpper
+    FirstToUpper
 };

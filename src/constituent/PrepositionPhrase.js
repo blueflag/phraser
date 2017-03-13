@@ -5,14 +5,14 @@ import {NounPhrase, NounPhraseFactory} from './NounPhrase';
 
 const PrepositionPhraseRecord = ConstituentRecordFactory({
     preposition: null, // Preposition
-    object: null // NounPhrase, TODO can also have Pronoun|Clause
+    object: null // NounPhrase
 });
 
 class PrepositionPhrase extends Constituent {
 
     constructor(...args: any) {
         super(...args);
-        this.types = ["PrepositionPhrase", "Modifier"];
+        this.types.push("PrepositionPhrase", "Modifier");
     }
 
     static isPrepositionPhrase(obj: any): boolean {

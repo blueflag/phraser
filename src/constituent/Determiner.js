@@ -11,7 +11,7 @@ class Determiner extends Constituent {
 
     constructor(...args: any) {
         super(...args);
-        this.types = ["Determiner"];
+        this.types.push("Determiner");
     }
 
     static isDeterminer(obj: any): boolean {

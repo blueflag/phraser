@@ -3,6 +3,7 @@ import {Constituent, ConstituentRecordFactory} from './Constituent';
 import {Verb, VerbFactory} from './Verb';
 import {AdverbFactory} from './Adverb';
 import {CheckType, CheckEnum} from '../decls/TypeErrors';
+import {Series} from './Series';
 
 const ADVERB_POSITION_ENUM = [
     "middle",
@@ -21,7 +22,7 @@ class VerbPhrase extends Constituent {
 
     constructor(...args: any) {
         super(...args);
-        this.types = ["VerbPhrase"];
+        this.types.push("VerbPhrase");
     }
 
     static isVerbPhrase(obj: any): boolean {
@@ -104,7 +105,7 @@ const VerbPhraseFactory = (verb: VerbPhrase|Verb|string): VerbPhrase => {
         return verb;
     }
     return new VerbPhrase(VerbPhraseRecord({
-        verb: VerbFactory()(verb)
+        verb: Series.isSeries(verb) ? verb : VerbFactory()(verb)
     }));
 };
 

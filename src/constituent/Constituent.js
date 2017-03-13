@@ -1,6 +1,7 @@
 import {Record, Map, List} from 'immutable';
 import {CheckType, CheckEnum} from '../decls/TypeErrors';
-import {firstToUpper} from '../utils/String';
+import {FirstToUpper} from '../utils/String';
+import {CreateList} from '../utils/List';
 
 const MODIFIER_POSITION_ENUM = [
     "front",
@@ -26,7 +27,7 @@ class Constituent {
     constructor(data: Map<string, any>, lexicon: Object = {}) {
         this.data = data;
         this.lexicon = lexicon;
-        this.types = [];
+        this.types = ["Constituent"];
     }
 
     static isConstituent(obj: any): boolean {
@@ -154,7 +155,7 @@ class Constituent {
                     : rendered;
 
                 if(item.data.first) {
-                    text = firstToUpper(text);
+                    text = FirstToUpper(text);
                 }
 
                 const {meta} = item.data;
@@ -189,15 +190,15 @@ class Constituent {
             .join("");
     }
 
-    before(item: Constituent|string): Constituent {
+    before(item: Array<Constituent|string>|List<Constituent|string>|Constituent|string): Constituent {
         return this.clone({
-            data: this.data.set("before", List([item]))
+            data: this.data.set("before", CreateList(item))
         });
     }
 
-    after(item: Constituent|string): Constituent {
+    after(item: Array<Constituent|string>|List<Constituent|string>|Constituent|string): Constituent {
         return this.clone({
-            data: this.data.set("after", List([item]))
+            data: this.data.set("after", CreateList(item))
         });
     }
 
@@ -205,8 +206,8 @@ class Constituent {
         if(!end) {
             return this.clone({
                 data: this.data
-                    .set("before", List([startOrBoth]))
-                    .set("after", List([startOrBoth]))
+                    .set("before", CreateList(startOrBoth))
+                    .set("after", CreateList(startOrBoth))
             });
         }
         return this.clone({
@@ -216,15 +217,15 @@ class Constituent {
         });
     }
 
-    afterPrevious(item: Constituent|string): Constituent {
+    afterPrevious(item: Array<Constituent|string>|List<Constituent|string>|Constituent|string): Constituent {
         return this.clone({
-            data: this.data.set("afterPrevious", List([item]))
+            data: this.data.set("afterPrevious", CreateList(item))
         });
     }
 
-    beforeNext(item: Constituent|string): Constituent {
+    beforeNext(item: Array<Constituent|string>|List<Constituent|string>|Constituent|string): Constituent {
         return this.clone({
-            data: this.data.set("beforeNext", List([item]))
+            data: this.data.set("beforeNext", CreateList(item))
         });
     }
 
@@ -245,7 +246,7 @@ class ArbitraryString extends Constituent {
 
     constructor(...args: any) {
         super(...args);
-        this.types = ["ArbitraryString"];
+        this.types.push("ArbitraryString");
     }
 
     static isArbitraryString(obj: any): boolean {

@@ -11,6 +11,7 @@ import {ParagraphFactory} from './constituent/Paragraph';
 import {PrepositionFactory} from './constituent/Preposition';
 import {PrepositionPhraseFactory} from './constituent/PrepositionPhrase';
 import {PronounFactory} from './constituent/Pronoun';
+import {SeriesFactory} from './constituent/Series';
 import {SentenceFactory} from './constituent/Sentence';
 import {VerbFactory} from './constituent/Verb';
 import {VerbPhraseFactory} from './constituent/VerbPhrase';
@@ -32,6 +33,7 @@ function Constituent(lexicon: Object) {
         PrepositionPhrase: PrepositionPhraseFactory,
         Pronoun: PronounFactory,
         Sentence: SentenceFactory,
+        Series: SeriesFactory,
         Verb: VerbFactory(lexicon),
         VerbPhrase: VerbPhraseFactory,
 

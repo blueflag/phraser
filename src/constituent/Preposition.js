@@ -9,7 +9,7 @@ class Preposition extends Constituent {
 
     constructor(...args: any) {
         super(...args);
-        this.types = ["Preposition"];
+        this.types.push("Preposition");
     }
 
     static isPreposition(obj: any): boolean {

@@ -9,7 +9,7 @@ class Pronoun extends Constituent {
 
     constructor(...args: any) {
         super(...args);
-        this.types = ["Pronoun", "Noun"];
+        this.types.push("Pronoun", "Noun");
     }
 
     static isPronoun(obj: any): boolean {

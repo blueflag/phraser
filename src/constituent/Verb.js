@@ -27,7 +27,7 @@ class Verb extends Constituent {
 
     constructor(...args: any) {
         super(...args);
-        this.types = ["Verb"];
+        this.types.push("Verb");
     }
 
     static isVerb(obj: any): boolean {

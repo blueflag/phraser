@@ -9,7 +9,7 @@ class Adjective extends Constituent {
 
     constructor(...args: any) {
         super(...args);
-        this.types = ["Adjective"];
+        this.types.push("Adjective");
     }
 
     static isAdjective(obj: any): boolean {

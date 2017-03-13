@@ -2,11 +2,12 @@ import {List, Map} from 'immutable';
 import {Constituent, ConstituentRecordFactory} from './Constituent';
 import {AdjectiveFactory} from './Adjective';
 import {DeterminerFactory} from './Determiner';
+import {Series} from './Series';
 import {Noun, NounFactory, NUMBER_ENUM, PERSON_ENUM} from './Noun';
 import {CheckEnum} from '../decls/TypeErrors';
 
 const NounPhraseRecord = ConstituentRecordFactory({
-    noun: null, // Noun|Pronoun
+    noun: null, // Noun|Pronoun|Series
     determiner: null, // Determiner
     adjectives: List(), // List<Adjective>
     modifiers: Map({
@@ -19,7 +20,7 @@ class NounPhrase extends Constituent {
 
     constructor(...args: any) {
         super(...args);
-        this.types = ["NounPhrase"];
+        this.types.push("NounPhrase");
     }
 
     static isNounPhrase(obj: any): boolean {
@@ -186,12 +187,12 @@ class NounPhrase extends Constituent {
 
 }
 
-const NounPhraseFactory = (noun: NounPhrase|Noun|string|number): NounPhrase => {
+const NounPhraseFactory = (noun: NounPhrase|Noun|Series|string|number): NounPhrase => {
     if(NounPhrase.isNounPhrase(noun)) {
         return noun;
     }
     return new NounPhrase(NounPhraseRecord({
-        noun: NounFactory(noun)
+        noun: Series.isSeries(noun) ? noun : NounFactory(noun)
     }));
 };
 

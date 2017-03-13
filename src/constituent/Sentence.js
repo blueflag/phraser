@@ -10,7 +10,7 @@ class Sentence extends Constituent {
 
     constructor(...args: any) {
         super(...args);
-        this.types = ["Sentence"];
+        this.types.push("Sentence");
     }
 
     static isSentence(obj: any): boolean {

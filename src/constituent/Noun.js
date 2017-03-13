@@ -23,7 +23,7 @@ class Noun extends Constituent {
 
     constructor(...args: any) {
         super(...args);
-        this.types = ["Noun"];
+        this.types.push("Noun");
     }
 
     static isNoun(obj: any): boolean {

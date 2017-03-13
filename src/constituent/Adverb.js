@@ -9,7 +9,7 @@ class Adverb extends Constituent {
 
     constructor(...args: any) {
         super(...args);
-        this.types = ["Adverb"];
+        this.types.push("Adverb");
     }
 
     static isAdverb(obj: any): boolean {

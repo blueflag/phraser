@@ -1,6 +1,7 @@
 import {List, Map} from 'immutable';
 import {Constituent, ConstituentRecordFactory, } from './Constituent';
 import {Adjective, AdjectiveFactory} from './Adjective';
+import {Series} from './Series';
 
 const AdjectivePhraseRecord = ConstituentRecordFactory({
     adjective: null, // Adjective
@@ -14,7 +15,7 @@ class AdjectivePhrase extends Constituent {
 
     constructor(...args: any) {
         super(...args);
-        this.types = ["AdjectivePhrase"];
+        this.types.push("AdjectivePhrase");
     }
 
     static isAdjectivePhrase(obj: any): boolean {
@@ -43,7 +44,7 @@ const AdjectivePhraseFactory = (adjective: AdjectivePhrase|Adjective|string): Ad
         return adjective;
     }
     return new AdjectivePhrase(AdjectivePhraseRecord({
-        adjective: AdjectiveFactory(adjective)
+        adjective: Series.isSeries(adjective) ? adjective : AdjectiveFactory(adjective)
     }));
 };
 
