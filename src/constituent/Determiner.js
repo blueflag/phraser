@@ -1,10 +1,12 @@
 import {List} from 'immutable';
 import {Constituent, ConstituentRecordFactory} from './Constituent';
 import {CheckType} from '../decls/TypeErrors';
+import {NounPhraseFactory} from './NounPhrase';
 
 const DeterminerRecord = ConstituentRecordFactory({
     determiner: "",
-    quantity: null
+    quantity: null,
+    possessor: null // NounPhrase
 });
 
 class Determiner extends Constituent {
@@ -22,15 +24,21 @@ class Determiner extends Constituent {
         return new Determiner(...args);
     }
 
-    _renderSelf(): List {
-        return List()
-            .push(this.data.determiner)
-            .push(this.data.quantity != null
-                ? this.data.quantity + ""
-                : null
-            )
-            .filter(ii => ii);
+    _flattenSelf(context: Map<string, any>): List<Constituent|string> {
+        const quantity: number = this.data.quantity != null
+            ? this.data.quantity + ""
+            : null;
+
+        return this._flattenChildren([
+            this.data.possessor,
+            this.data.determiner,
+            quantity
+        ], context);
     }
+
+    //
+    // determiner
+    //
 
     determiner(determiner: string): Determiner {
         CheckType(determiner, ["string"]);
@@ -43,10 +51,30 @@ class Determiner extends Constituent {
         return this.determiner(determiner);
     }
 
+    //
+    // quantity
+    //
+
     quantity(quantity: number): Determiner {
         CheckType(quantity, ["number"]);
         return this.clone({
             data: this.data.set('quantity', quantity)
+        });
+    }
+
+    //
+    // possessor
+    //
+
+    possessor(possessor: NounPhrase|string, suffix: string = null): Determiner {
+        CheckType(possessor, ["NounPhrase", "string"]);
+        possessor = NounPhraseFactory(possessor);
+        if(suffix) {
+            possessor = possessor.after(suffix);
+        }
+
+        return this.clone({
+            data: this.data.set('possessor', possessor)
         });
     }
 }

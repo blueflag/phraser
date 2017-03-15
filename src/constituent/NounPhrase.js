@@ -101,6 +101,12 @@ class NounPhrase extends Constituent {
         );
     }
 
+    possessor(possessor: NounPhrase|string, suffix: string = null): NounPhrase {
+        return this.determiner(
+            DeterminerFactory(this.data.determiner).possessor(possessor, suffix)
+        );
+    }
+
     //
     // set plural
     //
