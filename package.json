@@ -1,6 +1,6 @@
 {
   "name": "phraser",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "A small natural language generator. Makes words reads goods.",
   "main": "lib/index.js",
   "license": "MIT",
