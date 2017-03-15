@@ -32,6 +32,17 @@ class Determiner extends Constituent {
             .filter(ii => ii);
     }
 
+    determiner(determiner: string): Determiner {
+        CheckType(determiner, ["string"]);
+        return this.clone({
+            data: this.data.set('determiner', determiner)
+        });
+    }
+
+    det(determiner: string): Determiner {
+        return this.determiner(determiner);
+    }
+
     quantity(quantity: number): Determiner {
         CheckType(quantity, ["number"]);
         return this.clone({

@@ -72,8 +72,14 @@ class NounPhrase extends Constituent {
     // "7" dogs
 
     determiner(determiner: Determiner|string): NounPhrase {
+        if(typeof determiner == "string") {
+            determiner = this.data.determiner
+                ? this.data.determiner.determiner(determiner)
+                : DeterminerFactory(determiner);
+        }
+
         return this.clone({
-            data: this.data.set('determiner', DeterminerFactory(determiner))
+            data: this.data.set('determiner', determiner)
         });
     }
 
@@ -90,12 +96,9 @@ class NounPhrase extends Constituent {
     }
 
     quantity(quantity: number): NounPhrase {
-        if(!this.data.determiner) {
-            return this.determiner(DeterminerFactory("").quantity(quantity));
-        }
-        return this.clone({
-            data: this.data.update('determiner', det => det.quantity(quantity))
-        });
+        return this.determiner(
+            DeterminerFactory(this.data.determiner).quantity(quantity)
+        );
     }
 
     //
