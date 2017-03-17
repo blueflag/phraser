@@ -30,9 +30,9 @@ class Series extends Constituent {
             .reduce((list: List<Constituent>, item: Constituent, index: number, iter: List<Constituent>): Constituent => {
                 const isLast: boolean = index == iter.size - 1;
                 if(isLast) {
-                    return this.data.conjunction
-                    ? list.push(this.data.conjunction, item)
-                    : list.push(item);
+                    return iter.size > 1 && this.data.conjunction
+                        ? list.push(this.data.conjunction, item)
+                        : list.push(item);
                 }
                 const isSecondLast: boolean = index == iter.size - 2;
                 if(isSecondLast && !this.data.delimitLast) {
@@ -43,6 +43,24 @@ class Series extends Constituent {
             }, List());
 
         return this._flattenChildren(series, context);
+    }
+
+    //
+    // series
+    //
+
+    series(series: Series|Array<Constituent>|List<Constituent>): Series {
+        CheckType(series, ["Array", "List"]);
+
+        const seriesList: List<Constituent> = List(series)
+            .map(ii => typeof ii == "string"
+                ? ArbitraryStringFactory(ii)
+                : ii
+            );
+
+        return this.clone({
+            data: this.data.set('series', seriesList)
+        });
     }
 
     //
@@ -95,8 +113,8 @@ class Series extends Constituent {
     }
 }
 
-const SeriesFactory = (series: Series|Array<Constituent>): Series => {
-    CheckType(series, ["Series", "Array"]);
+const SeriesFactory = (series: Series|Array<Constituent>|List<Constituent>): Series => {
+    CheckType(series, ["Series", "Array", "List"]);
     if(Series.isSeries(series)) {
         return series;
     }

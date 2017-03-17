@@ -190,6 +190,10 @@ class Constituent {
             .join("");
     }
 
+    get(key: string): any {
+        return this.data.get(key);
+    }
+
     before(item: Array<Constituent|string>|List<Constituent|string>|Constituent|string): Constituent {
         return this.clone({
             data: this.data.set("before", CreateList(item))

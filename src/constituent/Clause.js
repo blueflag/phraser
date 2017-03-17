@@ -170,8 +170,8 @@ class Clause extends Constituent {
 
 const ClauseFactory = (
     subjectOrClause: Clause|NounPhrase|AdverbPhrase|Determiner|null,
-    verb: VerbPhrase|Verb|string,
-    object: ?Clause|NounPhrase|Noun|AdjectivePhrase|Adjective
+    verb: VerbPhrase|string,
+    object: ?Clause|NounPhrase|AdjectivePhrase
 ): Clause => {
 
     if(Clause.isClause(subjectOrClause)) {
@@ -180,7 +180,7 @@ const ClauseFactory = (
 
     CheckType(subjectOrClause, ['NounPhrase', 'AdverbPhrase', 'Determiner', 'Pronoun', 'null']);
     CheckType(verb, ['VerbPhrase']);
-    CheckType(object, ['NounPhrase', 'AdjectivePhrase', 'null', 'undefined']);
+    CheckType(object, ['Clause', 'NounPhrase', 'AdjectivePhrase', 'null', 'undefined']);
     object = object || null;
 
     if(AdverbPhrase.isAdverbPhrase(subjectOrClause)) {

@@ -14,6 +14,9 @@ function CheckType(item: any, validTypes: Array<string|Object>) {
                 if(test == "Array") {
                     return Array.isArray(item);
                 }
+                if(test == "List") {
+                    return List.isList(item);
+                }
                 return typeof item == test;
             }
             return typeof item == "object"

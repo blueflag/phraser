@@ -12,8 +12,12 @@ const ADVERB_POSITION_ENUM = [
 
 const VerbPhraseRecord = ConstituentRecordFactory({
     verb: null, // Verb
+    object: null, // ?Clause|NounPhrase|AdjectivePhrase|string
     adverbs: Map({
         middle: List(),
+        end: List()
+    }),
+    modifiers: Map({
         end: List()
     })
 });
@@ -80,7 +84,9 @@ class VerbPhrase extends Constituent {
             auxiliaries,
             this.data.adverbs.get('middle'),
             this.data.verb,
-            this.data.adverbs.get('end')
+            this.data.object,
+            this.data.adverbs.get('end'),
+            this.data.modifiers.get('end')
         ], context);
     }
 
@@ -98,14 +104,35 @@ class VerbPhrase extends Constituent {
     adv(adv: Adverb|string): VerbPhrase {
         return this.adverb(adv);
     }
+
+    //
+    // modifier
+    //
+
+    // dog "in the wild"
+    // dog "with no collar"
+    // dog "under the house"
+
+    modifier(modifier: any): VerbPhrase {
+        return this._modifier(modifier, "end");
+    }
 }
 
-const VerbPhraseFactory = (verb: VerbPhrase|Verb|string): VerbPhrase => {
+const VerbPhraseFactory = (
+    verb: VerbPhrase|Verb|string,
+    object: ?Clause|NounPhrase|AdjectivePhrase
+): VerbPhrase => {
+
     if(VerbPhrase.isVerbPhrase(verb)) {
         return verb;
     }
+
+    CheckType(object, ['Clause', 'NounPhrase', 'AdjectivePhrase', 'null', 'undefined']);
+    object = object || null;
+
     return new VerbPhrase(VerbPhraseRecord({
-        verb: Series.isSeries(verb) ? verb : VerbFactory()(verb)
+        verb: Series.isSeries(verb) ? verb : VerbFactory()(verb),
+        object
     }));
 };
 
