@@ -1,137 +1,44 @@
 import React from 'react';
 import {Constituent} from 'phraser';
 import Lexicon from './Lexicon';
-import {Map} from 'immutable';
-
-//
-// TODO - verb dictionarry with "has" and somehow use the same logic that is in VerbPhrase for auxiliaries
-// TODO - Series
-//
-
+import {List} from 'immutable';
 
 const {
     Clause,
     Paragraph,
     Sentence,
-    AdjP,
-    Det,
-    N,
     NP,
-    P,
     PP,
     V,
     VP
 } = Constituent(Lexicon);
 
 
-const filters: Object = {
-    suburb: {
-        exactly: "Richmond"
-    },
-    postcode: {
-        exactly: "3121"
-    },
-    propertyType: {
-        oneOf: ["?", ":("]
-    },
-    bedrooms: {
-        exactly: 2
-    }
-};
 
 export default () => {
     var sentences = [];
 
-    sentences.push('<h2>RealDemand examples and tests</h2>');
-    sentences.push('<h4>Suburb Ranking</h4>');
-    sentences.push('<p>e.g. <em>"Richmond ranks 4th for supply and demand metrics when comparing all suburbs in Victoria."</em></p>');
+    sentences.push('<h2>Examples and tests</h2>');
 
-    sentences.push(() => {
-        const comparisonNoun = NP("suburb")
-            .plural()
-            .det("all") // ALL, BOTH etc
-            .modifier(PP("in", "Victoria"));
 
-        return Sentence(
-            Clause(
-                NP("Richmond").setMeta("style", {color: "#6666FF"}),
-                "rank",
-                AdjP("4th")
-            )
-                .present()
-                .modifier(PP("for", "supply and demand metrics"))
-                .modifier(Clause(comparisonNoun, VP("is"), AdjP("compared")).whAdverb("when").setMeta("style", {color: "#999999"}))
-        );
-    });
-
-    sentences.push('<h4>Supply Trends</h4>');
-    sentences.push('<p>e.g. <em>"Hawthorn\'s supply has been trending slightly upward looking at the last 6 months."</em></p>');
-    sentences.push(() => {
-        return Sentence(
-            Clause(
-                NP("supply").det("Hawthorn's"), // TODO separate type or method for possessive determiners
-                VP("trend").adverb("slightly upward") // TODO add verb dictionary
-                // ^ TODO adverb positions
-                // ^ TODO add degree as a type for "very" etc.
-            )
-                .present()
-                .perfectContinuous()
-                .modifier(PP("looking at", NP("month").det(Det("the last").quantity(6))))
-        );
-    });
-
-    sentences.push('<p>e.g. <em>"The average number of listings is 22 which is 12% higher than the state average."</em></p>');
-    sentences.push(() => {
-        return Sentence(
-            Clause(
-                NP("average number")
-                    .the()
-                    .modifier(PP("of", "listings")),
-                VP("is"),
-                NP("34")
-            )
-                .modifier(PP("looking at", NP("month").det(Det("the last").quantity(6)))) // TODO, fronting
-        );
-    });
-
-    sentences.push('<h4>Property Type Breakdown</h4>');
-    sentences.push('<p>e.g. <em>"The most demanded property type in St. Kilda between $100K and $500K in the past year with 3 bedrooms, 2 bathrooms and 1 garage is house, which has 20% of the total views."</em></p>');
-    sentences.push(() => {
-        return Sentence(
-            Clause(
-                NP("property type")
-                    .the()
-                    .adjective("most demanded")
-                    .modifier(PP("in", "St. Kilda 3101"))
-                    .modifier(PP("between", "$100K and $500K"))
-                    .modifier(PP("in", "the past year"))
-                    .modifier(PP("with", "3 bedrooms, 2 bathrooms and 1 garage")), // TODO use a Join / Series / Conjunction thing
-                VP("is"),
-                NP("house")
-            )
-                .modifier(
-                    Clause(
-                        null,
-                        VP("has"),
-                        NP("20%").modifier(PP("of", NP("total views").the()))
-                    )
-                    .whDeterminer("which")
-                    .afterPrevious(",")
-                )
-        );
-    });
 
     sentences.push('<h2>Punctuation tests</h2>');
     sentences.push(() => {
         return Sentence(
             Clause(
-                NP("dog").the(),
-                VP("eat"),
-                NP("food")
+                NP("dog")
+                    .quantity(3)
+                    .determiner("those"),
+                VP("ate", NP("food"))
+                    .adverb("quickly", "middle")
             )
-                .present()
                 .modifier(
-                    PP(P("from").afterPrevious(","), NP("bowl").a())
+                    PP(
+                        "from",
+                        NP("trash can")
+                            .a()
+                            .adjective("huge")
+                    )
                 )
         );
     });
@@ -148,12 +55,6 @@ export default () => {
         ).after("?")
     });
 
-    sentences.push(() => {
-        return Sentence(
-            NP("hello").after(","),
-            Clause(null, "are", NP("you")).whAdverb("how")
-        ).after("?");
-    });
 
     sentences.push('<h2>Verb tests</h2>');
 
