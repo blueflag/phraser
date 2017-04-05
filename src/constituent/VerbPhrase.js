@@ -16,9 +16,6 @@ const VerbPhraseRecord = ConstituentRecordFactory({
     adverbs: Map({
         middle: List(),
         end: List()
-    }),
-    modifiers: Map({
-        end: List()
     })
 });
 
@@ -85,8 +82,7 @@ class VerbPhrase extends Constituent {
             this.data.adverbs.get('middle'),
             this.data.verb,
             this.data.object,
-            this.data.adverbs.get('end'),
-            this.data.modifiers.get('end')
+            this.data.adverbs.get('end')
         ], context);
     }
 
@@ -103,18 +99,6 @@ class VerbPhrase extends Constituent {
 
     adv(adv: Adverb|string): VerbPhrase {
         return this.adverb(adv);
-    }
-
-    //
-    // modifier
-    //
-
-    // dog "in the wild"
-    // dog "with no collar"
-    // dog "under the house"
-
-    modifier(modifier: any): VerbPhrase {
-        return this._modifier(modifier, "end");
     }
 }
 
