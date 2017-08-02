@@ -1,4 +1,6 @@
 # phraser
+[![phraser npm](https://img.shields.io/npm/v/phraser.svg?style=flat-square)](https://www.npmjs.com/package/stampy)
+
 
 ## Early stages of development, please prepare for large amounts of changes until version 1.0.0.
 
