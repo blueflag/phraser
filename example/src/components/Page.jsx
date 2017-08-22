@@ -10,7 +10,8 @@ const {
     NP,
     PP,
     V,
-    VP
+    VP,
+    Series
 } = Constituent(Lexicon);
 
 
@@ -53,6 +54,34 @@ export default () => {
         return Sentence(
             NP("fire")
         ).after("?")
+    });
+
+    sentences.push('<h2>Quantity tests</h2>');
+    sentences.push('<p>if quantity() is given a variable of type number, the noun number will be set automatically. In all other circumstances the noun number must be set independently</p>');
+
+    sentences.push(() => {
+        return Sentence(
+            Series([
+                NP("hat").quantity(0),
+                NP("hat").quantity(1),
+                NP("hat").quantity(2),
+                NP("hat").quantity(2).single() // single() is ignored because quantity() is given a variable of type number
+            ])
+                .noConjunction()
+        );
+    });
+
+    sentences.push(() => {
+        return Sentence(
+            Series([
+                NP("boot").quantity("ONE").singular(),
+                NP("boot").quantity("a bajillion").plural(),
+                NP("boot").quantity("zero").numberFromQuantity(0),
+                NP("boot").quantity("one").numberFromQuantity(1),
+                NP("boot").quantity("myriad").numberFromQuantity(2)
+            ])
+                .noConjunction()
+        );
     });
 
 

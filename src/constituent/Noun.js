@@ -19,6 +19,11 @@ const NounRecord = ConstituentRecordFactory({
     person: "third"
 });
 
+const numberFromQuantity = (quantity: number): string => {
+    CheckType(quantity, ["number"]);
+    return Math.abs(quantity) !== 1 ? "plural" : "singular";
+};
+
 class Noun extends Constituent {
 
     constructor(...args: any) {
@@ -84,6 +89,10 @@ class Noun extends Constituent {
         });
     }
 
+    numberFromQuantity(quantity: number): string {
+        return this.number(numberFromQuantity(quantity));
+    }
+
     plural(): Noun {
         return this.number('plural');
     }
@@ -134,6 +143,7 @@ const NounFactory = (noun: Noun|string|number): Noun => {
 export {
     Noun,
     NounFactory,
+    numberFromQuantity,
     NUMBER_ENUM,
     PERSON_ENUM
 };
