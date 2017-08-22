@@ -21,7 +21,7 @@ const NounRecord = ConstituentRecordFactory({
 
 const numberFromQuantity = (quantity: number): string => {
     CheckType(quantity, ["number"]);
-    return Math.abs(quantity) != 1 ? "plural" : "singular";
+    return Math.abs(quantity) !== 1 ? "plural" : "singular";
 };
 
 class Noun extends Constituent {

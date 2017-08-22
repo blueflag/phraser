@@ -44,10 +44,10 @@ class NounPhrase extends Constituent {
             .delete('person')
             .delete('number');
 
-        // set noun pluralization based off determiner's quantity
+        // if quantity is of type number, set noun pluralization based off determiner's quantity
         if(noun && determiner) {
             const {quantity} = determiner.data;
-            if(quantity && !isNaN(quantity)) {
+            if(typeof quantity === "number") {
                 context = context.set('number', numberFromQuantity(quantity));
             }
         }
