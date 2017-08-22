@@ -3,7 +3,7 @@ import {Constituent, ConstituentRecordFactory} from './Constituent';
 import {AdjectiveFactory} from './Adjective';
 import {DeterminerFactory} from './Determiner';
 import {Series} from './Series';
-import {Noun, NounFactory, NUMBER_ENUM, PERSON_ENUM} from './Noun';
+import {Noun, NounFactory, numberFromQuantity, NUMBER_ENUM, PERSON_ENUM} from './Noun';
 import {CheckEnum} from '../decls/TypeErrors';
 
 const NounPhraseRecord = ConstituentRecordFactory({
@@ -47,8 +47,8 @@ class NounPhrase extends Constituent {
         // set noun pluralization based off determiner's quantity
         if(noun && determiner) {
             const {quantity} = determiner.data;
-            if(quantity != null) {
-                context = context.set('number', Math.abs(quantity) != 1 ? "plural" : "singular");
+            if(quantity && !isNaN(quantity)) {
+                context = context.set('number', numberFromQuantity(quantity));
             }
         }
 
@@ -95,7 +95,7 @@ class NounPhrase extends Constituent {
         return this.determiner('a');
     }
 
-    quantity(quantity: number): NounPhrase {
+    quantity(quantity: number|string): NounPhrase {
         return this.determiner(
             DeterminerFactory(this.data.determiner).quantity(quantity)
         );
@@ -125,6 +125,12 @@ class NounPhrase extends Constituent {
         CheckEnum(number, NUMBER_ENUM);
         return this.clone({
             data: this.data.update('noun', noun => noun.number(number))
+        });
+    }
+
+    numberFromQuantity(quantity: number): NounPhrase {
+        return this.clone({
+            data: this.data.update('noun', noun => noun.numberFromQuantity(quantity))
         });
     }
 

@@ -25,8 +25,8 @@ class Determiner extends Constituent {
     }
 
     _flattenSelf(context: Map<string, any>): List<Constituent|string> {
-        const quantity: number = this.data.quantity != null
-            ? this.data.quantity + ""
+        const quantity: number|string = this.data.quantity != null
+            ? `${this.data.quantity}`
             : null;
 
         return this._flattenChildren([
@@ -55,8 +55,8 @@ class Determiner extends Constituent {
     // quantity
     //
 
-    quantity(quantity: number): Determiner {
-        CheckType(quantity, ["number"]);
+    quantity(quantity: number|string): Determiner {
+        CheckType(quantity, ["number", "string"]);
         return this.clone({
             data: this.data.set('quantity', quantity)
         });
