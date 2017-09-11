@@ -28,10 +28,13 @@ class Paragraph extends Constituent {
 
 }
 
-const ParagraphFactory = (...sentences: Sentence): Paragraph => {
-    return new Paragraph(ParagraphRecord({
-        sentences: List(sentences)
-    }));
+const ParagraphFactory = (config: Object) => (...sentences: Sentence): Paragraph => {
+    return new Paragraph(
+        ParagraphRecord({
+            sentences: List(sentences)
+        }),
+        config
+    );
 };
 
 export {

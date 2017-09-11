@@ -1,5 +1,6 @@
 import {Constituent, ConstituentRecordFactory} from './Constituent';
 import {CheckType, CheckEnum} from '../decls/TypeErrors';
+import {numberFromQuantity, NUMBER_ENUM, PERSON_ENUM} from './Noun';
 
 const TENSE_ENUM = [
     'past',
@@ -49,7 +50,7 @@ class Verb extends Constituent {
 
         return new Verb(
             data,
-            this.lexicon
+            this.config
         );
     }
 
@@ -62,7 +63,7 @@ class Verb extends Constituent {
             person
         } = this.data;
 
-        //console.log(this.lexicon);
+        //console.log(this.config);
 
         if(aspect == "continuous" || aspect == "perfectContinuous") {
             verb += "ing";
@@ -131,14 +132,69 @@ class Verb extends Constituent {
         return this.aspect('perfectContinuous');
     }
 
+    //
+    // number
+    //
+
+    number(number: string): NounPhrase {
+        CheckEnum(number, NUMBER_ENUM);
+        return this.clone({
+            data: this.data.set('number', number)
+        });
+    }
+
+    numberFromQuantity(quantity: number): NounPhrase {
+        return this.clone({
+            data: this.data.set('number', numberFromQuantity(quantity))
+        });
+    }
+
+    plural(): NounPhrase {
+        return this.number('plural');
+    }
+
+    singular(): NounPhrase {
+        return this.number('singular');
+    }
+
+    single(): NounPhrase {
+        return this.number('singular');
+    }
+
+    //
+    // person
+    //
+
+    person(person: string): NounPhrase {
+        CheckEnum(person, PERSON_ENUM);
+        return this.clone({
+            data: this.data.set('person', person)
+        });
+    }
+
+    firstPerson(): NounPhrase {
+        return this.person('first');
+    }
+
+    secondPerson(): NounPhrase {
+        return this.person('second');
+    }
+
+    thirdPerson(): NounPhrase {
+        return this.person('third');
+    }
+
 }
 
-const VerbFactory = (lexicon: Object) => (verb: Verb|string): Verb => {
+const VerbFactory = (config: Object) => (verb: Verb|string): Verb => {
     CheckType(verb, ["Verb", "string"]);
     if(verb instanceof Verb) {
         return verb;
     }
-    return new Verb(VerbRecord({verb}), lexicon);
+    return new Verb(
+        VerbRecord({verb}),
+        config
+    );
 };
 
 export {

@@ -1,5 +1,5 @@
 import {List, Map} from 'immutable';
-import {Constituent, ConstituentRecordFactory, } from './Constituent';
+import {Constituent, ConstituentRecordFactory, ArbitraryString} from './Constituent';
 import {Adjective, AdjectiveFactory} from './Adjective';
 import {Series} from './Series';
 
@@ -39,13 +39,18 @@ class AdjectivePhrase extends Constituent {
     }
 }
 
-const AdjectivePhraseFactory = (adjective: AdjectivePhrase|Adjective|string): AdjectivePhrase => {
+const AdjectivePhraseFactory = (config: Object) => (adjective: AdjectivePhrase|Adjective|string): AdjectivePhrase => {
     if(AdjectivePhrase.isAdjectivePhrase(adjective)) {
         return adjective;
     }
-    return new AdjectivePhrase(AdjectivePhraseRecord({
-        adjective: Series.isSeries(adjective) ? adjective : AdjectiveFactory(adjective)
-    }));
+    return new AdjectivePhrase(
+        AdjectivePhraseRecord({
+            adjective: Series.isSeries(adjective) || ArbitraryString.isArbitraryString(adjective)
+                ? adjective
+                : AdjectiveFactory(config)(adjective)
+        }),
+        config
+    );
 };
 
 export {

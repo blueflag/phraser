@@ -1,15 +1,13 @@
 import {List, Map} from 'immutable';
 import {Constituent, ConstituentRecordFactory} from './Constituent';
 import {CheckType, CheckEnum} from '../decls/TypeErrors';
-import {Adjective} from './Adjective';
 import {AdjectivePhrase} from './AdjectivePhrase';
 import {Adverb, AdverbFactory} from './Adverb';
 import {AdverbPhrase} from './AdverbPhrase';
 import {Determiner, DeterminerFactory} from './Determiner';
-import {Noun} from './Noun';
 import {NounPhrase} from './NounPhrase';
 import {Pronoun, PronounFactory} from './Pronoun';
-import {Verb, TENSE_ENUM, ASPECT_ENUM} from './Verb';
+import {TENSE_ENUM, ASPECT_ENUM} from './Verb';
 import {VerbPhrase} from './VerbPhrase';
 
 const ClauseRecord = ConstituentRecordFactory({
@@ -93,7 +91,7 @@ class Clause extends Constituent {
         CheckType(whAdverb, ['Adverb', 'string']);
         return this.clone({
             data: this.data
-                .set('whAdverb', AdverbFactory(whAdverb))
+                .set('whAdverb', AdverbFactory(this.config)(whAdverb))
                 .set('whDeterminer', '')
                 .set('whPronoun', '')
         });
@@ -104,7 +102,7 @@ class Clause extends Constituent {
         return this.clone({
             data: this.data
                 .set('whAdverb', '')
-                .set('whDeterminer', DeterminerFactory(whDeterminer))
+                .set('whDeterminer', DeterminerFactory(this.config)(whDeterminer))
                 .set('whPronoun', '')
         });
     }
@@ -115,7 +113,7 @@ class Clause extends Constituent {
             data: this.data
                 .set('whDeterminer', '')
                 .set('whAdverb', '')
-                .set('whPronoun', PronounFactory(whPronoun))
+                .set('whPronoun', PronounFactory(this.config)(whPronoun))
         });
     }
 
@@ -167,7 +165,7 @@ class Clause extends Constituent {
     }
 }
 
-const ClauseFactory = (
+const ClauseFactory = (config: Object) => (
     subjectOrClause: Clause|NounPhrase|AdverbPhrase|Determiner|null,
     verb: VerbPhrase|string,
     object: ?Clause|NounPhrase|AdjectivePhrase
@@ -183,34 +181,46 @@ const ClauseFactory = (
     object = object || null;
 
     if(AdverbPhrase.isAdverbPhrase(subjectOrClause)) {
-        return new Clause(ClauseRecord({
-            whAdverb: subjectOrClause,
-            verb,
-            object
-        }));
+        return new Clause(
+            ClauseRecord({
+                whAdverb: subjectOrClause,
+                verb,
+                object
+            }),
+            config
+        );
     }
 
     if(Determiner.isDeterminer(subjectOrClause)) {
-        return new Clause(ClauseRecord({
-            whDeterminer: subjectOrClause,
-            verb,
-            object
-        }));
+        return new Clause(
+            ClauseRecord({
+                whDeterminer: subjectOrClause,
+                verb,
+                object
+            }),
+            config
+        );
     }
 
     if(Pronoun.isPronoun(subjectOrClause)) {
-        return new Clause(ClauseRecord({
-            whPronoun: subjectOrClause,
-            verb,
-            object
-        }));
+        return new Clause(
+            ClauseRecord({
+                whPronoun: subjectOrClause,
+                verb,
+                object
+            }),
+            config
+        );
     }
 
-    return new Clause(ClauseRecord({
-        subject: subjectOrClause,
-        verb,
-        object
-    }));
+    return new Clause(
+        ClauseRecord({
+            subject: subjectOrClause,
+            verb,
+            object
+        }),
+        config
+    );
 };
 
 

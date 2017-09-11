@@ -40,10 +40,13 @@ class Sentence extends Constituent {
 
 }
 
-const SentenceFactory = (...sentence: Consitutent|string): Sentence => {
-    return new Sentence(SentenceRecord({
-        sentence: List(sentence).filter(ii => ii)
-    }));
+const SentenceFactory = (config: Object) => (...sentence: Consitutent|string): Sentence => {
+    return new Sentence(
+        SentenceRecord({
+            sentence: List(sentence).filter(ii => ii)
+        }),
+        config
+    );
 };
 
 export {

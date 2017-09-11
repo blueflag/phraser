@@ -26,12 +26,15 @@ class Conjunction extends Constituent {
 
 }
 
-const ConjunctionFactory = (conjunction: Conjunction|string): Conjunction => {
+const ConjunctionFactory = (config: Object) => (conjunction: Conjunction|string): Conjunction => {
     CheckType(conjunction, ["Conjunction", "string"]);
     if(Conjunction.isConjunction(conjunction)) {
         return conjunction;
     }
-    return new Conjunction(ConjunctionRecord({conjunction}));
+    return new Conjunction(
+        ConjunctionRecord({conjunction}),
+        config
+    );
 };
 
 export {

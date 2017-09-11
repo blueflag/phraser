@@ -5,7 +5,7 @@ import {CheckType} from '../decls/TypeErrors';
 
 const SeriesRecord = ConstituentRecordFactory({
     series: List(), // List<Constituent>
-    conjunction: ConjunctionFactory("and"),
+    conjunction: null,
     delimiter: ",",
     delimitLast: false
 });
@@ -54,7 +54,7 @@ class Series extends Constituent {
 
         const seriesList: List<Constituent> = List(series)
             .map(ii => typeof ii == "string"
-                ? ArbitraryStringFactory(ii)
+                ? ArbitraryStringFactory(this.config)(ii)
                 : ii
             );
 
@@ -71,7 +71,7 @@ class Series extends Constituent {
         CheckType(conjunction, ["Conjunction", "string", "null"]);
         return this.clone({
             data: this.data.set('conjunction', conjunction
-                ? ConjunctionFactory(conjunction)
+                ? ConjunctionFactory(this.config)(conjunction)
                 : null
             )
         });
@@ -113,7 +113,7 @@ class Series extends Constituent {
     }
 }
 
-const SeriesFactory = (series: Series|Array<Constituent>|List<Constituent>): Series => {
+const SeriesFactory = (config: Object) => (series: Series|Array<Constituent>|List<Constituent>): Series => {
     CheckType(series, ["Series", "Array", "List"]);
     if(Series.isSeries(series)) {
         return series;
@@ -121,13 +121,17 @@ const SeriesFactory = (series: Series|Array<Constituent>|List<Constituent>): Ser
 
     const seriesList: List<Constituent> = List(series)
         .map(ii => typeof ii == "string"
-            ? ArbitraryStringFactory(ii)
+            ? ArbitraryStringFactory(config)(ii)
             : ii
         );
 
-    const seriesInstance: Series = new Series(SeriesRecord({
-        series: seriesList
-    }));
+    const seriesInstance: Series = new Series(
+        SeriesRecord({
+            series: seriesList,
+            conjunction: ConjunctionFactory(config)("and")
+        }),
+        config
+    );
 
     return seriesInstance;
 };

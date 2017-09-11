@@ -1,5 +1,5 @@
 import {List, Map} from 'immutable';
-import {Constituent, ConstituentRecordFactory} from './Constituent';
+import {Constituent, ConstituentRecordFactory, ArbitraryString} from './Constituent';
 import {Verb, VerbFactory} from './Verb';
 import {AdverbFactory} from './Adverb';
 import {CheckType, CheckEnum} from '../decls/TypeErrors';
@@ -93,7 +93,12 @@ class VerbPhrase extends Constituent {
         CheckType(position, ['string']);
         CheckEnum(position, ADVERB_POSITION_ENUM);
         return this.clone({
-            data: this.data.updateIn(['adverbs', position], advs => advs.push(AdverbFactory(adv)))
+            data: this.data.updateIn(
+                ['adverbs', position],
+                advs => advs.push(
+                    AdverbFactory(this.config)(adv)
+                )
+            )
         });
     }
 
@@ -102,7 +107,7 @@ class VerbPhrase extends Constituent {
     }
 }
 
-const VerbPhraseFactory = (
+const VerbPhraseFactory = (config: Object) => (
     verb: VerbPhrase|Verb|string,
     object: ?Clause|NounPhrase|AdjectivePhrase
 ): VerbPhrase => {
@@ -114,10 +119,15 @@ const VerbPhraseFactory = (
     CheckType(object, ['Clause', 'NounPhrase', 'AdjectivePhrase', 'null', 'undefined']);
     object = object || null;
 
-    return new VerbPhrase(VerbPhraseRecord({
-        verb: Series.isSeries(verb) ? verb : VerbFactory()(verb),
-        object
-    }));
+    return new VerbPhrase(
+        VerbPhraseRecord({
+            verb: Series.isSeries(verb) || ArbitraryString.isArbitraryString(verb)
+                ? verb
+                : VerbFactory(config)(verb),
+            object
+        }),
+        config
+    );
 };
 
 export {

@@ -26,12 +26,15 @@ class Pronoun extends Constituent {
 
 }
 
-const PronounFactory = (pronoun: Pronoun|string): Pronoun => {
+const PronounFactory = (config: Object) => (pronoun: Pronoun|string): Pronoun => {
     CheckType(pronoun, ["Pronoun", "string"]);
     if(Pronoun.isPronoun(pronoun)) {
         return pronoun;
     }
-    return new Pronoun(PronounRecord({pronoun}));
+    return new Pronoun(
+        PronounRecord({pronoun}),
+        config
+    );
 };
 
 export {

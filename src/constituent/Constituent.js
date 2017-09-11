@@ -24,9 +24,9 @@ const ConstituentRecordFactory = (initialValues: Object): Record => {
 
 class Constituent {
 
-    constructor(data: Map<string, any>, lexicon: Object = {}) {
+    constructor(data: Map<string, any>, config: Object = {}) {
         this.data = data;
-        this.lexicon = lexicon;
+        this.config = config;
         this.types = ["Constituent"];
     }
 
@@ -56,7 +56,9 @@ class Constituent {
             // any non-constituents are cast to strings and put inside an ArbitraryString constituent
             .reduce((list: List<Constituent|string|null>, item: Constituent|string|null): List<Constituent|string> => {
                 if(typeof item != "object" || !item._flattenSelf) {
-                    return list.push(ArbitraryStringFactory(item + ""));
+                    return list.push(
+                        ArbitraryStringFactory(this.config)(item + "")
+                    );
                 }
                 return list.concat(item._flattenSelf(context));
             }, List())
@@ -93,6 +95,16 @@ class Constituent {
         return "...";
     }
 
+    _renderNumberString(number: string|number|null): ?string {
+        if(number == null) {
+            return null;
+        }
+        if(typeof number === "number") {
+            return this.config.numberRenderer(number);
+        }
+        return number;
+    }
+
     _modifier(modifier: Modifier, position: string = "end"): Constituent {
         CheckType(modifier, ["Modifier"]);
         CheckEnum(position, MODIFIER_POSITION_ENUM);
@@ -109,7 +121,7 @@ class Constituent {
     clone(override: Object = {}): Constituent {
         return this._clone(
             override.data || this.data,
-            override.lexicon || this.lexicon
+            override.config || this.config
         );
     }
 
@@ -143,7 +155,7 @@ class Constituent {
                 return item;
             })
             // add spaces
-            .interpose(ArbitraryStringFactory(" "));
+            .interpose(ArbitraryStringFactory(this.config)(" "));
     }
 
     render(): List<Object> {
@@ -283,8 +295,11 @@ class ArbitraryString extends Constituent {
 
 }
 
-const ArbitraryStringFactory = (string: string): ArbitraryString => {
-    return new ArbitraryString(ArbitraryStringRecord({string}));
+const ArbitraryStringFactory = (config: Object) => (string: string): ArbitraryString => {
+    return new ArbitraryString(
+        ArbitraryStringRecord({string}),
+        config
+    );
 };
 
 
