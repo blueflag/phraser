@@ -12,7 +12,10 @@ const {
     V,
     VP,
     Series
-} = Constituent(Lexicon);
+} = Constituent({
+    lexicon: Lexicon,
+    numberRenderer: ii => `${ii}`
+});
 
 
 
@@ -46,7 +49,7 @@ export default () => {
 
     sentences.push(() => {
         return Sentence(
-            NP("fire")
+            NP("fire").setMeta("ppp", "ooo").adj("big")
         );
     });
 
@@ -84,6 +87,25 @@ export default () => {
         );
     });
 
+    sentences.push('<h2>Number noun tests</h2>');
+
+    sentences.push(() => {
+        return Sentence(
+            Clause(
+                NP("age").possessor("my"),
+                VP("is", NP("twelve"))
+            )
+        );
+    });
+
+    sentences.push(() => {
+        return Sentence(
+            Clause(
+                NP("age").possessor("my"),
+                VP("is", NP(123456))
+            )
+        );
+    });
 
     sentences.push('<h2>Verb tests</h2>');
 

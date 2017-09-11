@@ -26,12 +26,15 @@ class Preposition extends Constituent {
 
 }
 
-const PrepositionFactory = (preposition: Preposition|string): Preposition => {
+const PrepositionFactory = (config: Object) => (preposition: Preposition|string): Preposition => {
     CheckType(preposition, ["Preposition", "string"]);
     if(Preposition.isPreposition(preposition)) {
         return preposition;
     }
-    return new Preposition(PrepositionRecord({preposition}));
+    return new Preposition(
+        PrepositionRecord({preposition}),
+        config
+    );
 };
 
 export {

@@ -25,14 +25,11 @@ class Determiner extends Constituent {
     }
 
     _flattenSelf(context: Map<string, any>): List<Constituent|string> {
-        const quantity: number|string = this.data.quantity != null
-            ? `${this.data.quantity}`
-            : null;
 
         return this._flattenChildren([
             this.data.possessor,
             this.data.determiner,
-            quantity
+            this._renderNumberString(this.data.quantity)
         ], context);
     }
 
@@ -68,7 +65,7 @@ class Determiner extends Constituent {
 
     possessor(possessor: NounPhrase|string, suffix: string = null): Determiner {
         CheckType(possessor, ["NounPhrase", "string"]);
-        possessor = NounPhraseFactory(possessor);
+        possessor = NounPhraseFactory(this.config)(possessor);
         if(suffix) {
             possessor = possessor.after(suffix);
         }
@@ -79,14 +76,17 @@ class Determiner extends Constituent {
     }
 }
 
-const DeterminerFactory = (determiner: Determiner|string): Determiner => {
+const DeterminerFactory = (config: Object) => (determiner: Determiner|string): Determiner => {
     CheckType(determiner, [Determiner, "string", "undefined", "null"]);
     if(Determiner.isDeterminer(determiner)) {
         return determiner;
     }
-    return new Determiner(DeterminerRecord({
-        determiner: determiner || ""
-    }));
+    return new Determiner(
+        DeterminerRecord({
+            determiner: determiner || ""
+        }),
+        config
+    );
 };
 
 export {

@@ -1,5 +1,5 @@
 import {List} from 'immutable';
-import {Constituent, ConstituentRecordFactory} from './Constituent';
+import {Constituent, ConstituentRecordFactory, ArbitraryString} from './Constituent';
 import {Adverb, AdverbFactory} from './Adverb';
 import {Series} from './Series';
 
@@ -29,13 +29,18 @@ class AdverbPhrase extends Constituent {
     }
 }
 
-const AdverbPhraseFactory = (adverb: AdverbPhrase|Adverb|string): AdverbPhrase => {
+const AdverbPhraseFactory = (config: Object) => (adverb: AdverbPhrase|Adverb|string): AdverbPhrase => {
     if(AdverbPhrase.isAdverbPhrase(adverb)) {
         return adverb;
     }
-    return new AdverbPhrase(AdverbPhraseRecord({
-        adverb: Series.isSeries(adverb) ? adverb : AdverbFactory(adverb)
-    }));
+    return new AdverbPhrase(
+        AdverbPhraseRecord({
+            adverb: Series.isSeries(adverb) || ArbitraryString.isArbitraryString(adverb)
+                ? adverb
+                : AdverbFactory(config)(adverb)
+        }),
+        config
+    );
 };
 
 export {

@@ -56,6 +56,8 @@ class Noun extends Constituent {
             person
         } = this.data;
 
+        noun = this._renderNumberString(noun);
+
         if(person == "first") {
             return number == "singular" ? "I" : "we";
         }
@@ -64,6 +66,7 @@ class Noun extends Constituent {
         }
         if(number == "plural") {
             noun = plural || `${noun}s`;
+            // TODO use lexicon for pluralization rules https://github.com/blueflag/phraser/issues/8
         }
         return noun;
     }
@@ -130,14 +133,17 @@ class Noun extends Constituent {
 
 }
 
-const NounFactory = (noun: Noun|string|number): Noun => {
+const NounFactory = (config: Object) => (noun: Noun|string|number): Noun => {
     CheckType(noun, [Noun, "string", "number"]);
     if(Noun.isNoun(noun)) {
         return noun;
     }
-    return new Noun(NounRecord({
-        noun: `${noun}`
-    }));
+    return new Noun(
+        NounRecord({
+            noun
+        }),
+        config
+    );
 };
 
 export {

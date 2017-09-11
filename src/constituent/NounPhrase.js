@@ -1,5 +1,5 @@
 import {List, Map} from 'immutable';
-import {Constituent, ConstituentRecordFactory} from './Constituent';
+import {Constituent, ConstituentRecordFactory, ArbitraryString} from './Constituent';
 import {AdjectiveFactory} from './Adjective';
 import {DeterminerFactory} from './Determiner';
 import {Series} from './Series';
@@ -75,7 +75,7 @@ class NounPhrase extends Constituent {
         if(typeof determiner == "string") {
             determiner = this.data.determiner
                 ? this.data.determiner.determiner(determiner)
-                : DeterminerFactory(determiner);
+                : DeterminerFactory(this.config)(determiner);
         }
 
         return this.clone({
@@ -97,13 +97,13 @@ class NounPhrase extends Constituent {
 
     quantity(quantity: number|string): NounPhrase {
         return this.determiner(
-            DeterminerFactory(this.data.determiner).quantity(quantity)
+            DeterminerFactory(this.config)(this.data.determiner).quantity(quantity)
         );
     }
 
     possessor(possessor: NounPhrase|string, suffix: string = null): NounPhrase {
         return this.determiner(
-            DeterminerFactory(this.data.determiner).possessor(possessor, suffix)
+            DeterminerFactory(this.config)(this.data.determiner).possessor(possessor, suffix)
         );
     }
 
@@ -178,7 +178,12 @@ class NounPhrase extends Constituent {
 
     adjective(adj: Adjective|string): NounPhrase {
         return this.clone({
-            data: this.data.update('adjectives', adjs => adjs.push(AdjectiveFactory(adj)))
+            data: this.data.update(
+                'adjectives',
+                adjs => adjs.push(
+                    AdjectiveFactory(this.config)(adj)
+                )
+            )
         });
     }
 
@@ -202,13 +207,18 @@ class NounPhrase extends Constituent {
 
 }
 
-const NounPhraseFactory = (noun: NounPhrase|Noun|Series|string|number): NounPhrase => {
+const NounPhraseFactory = (config: Object) => (noun: NounPhrase|Noun|Series|string|number): NounPhrase => {
     if(NounPhrase.isNounPhrase(noun)) {
         return noun;
     }
-    return new NounPhrase(NounPhraseRecord({
-        noun: Series.isSeries(noun) ? noun : NounFactory(noun)
-    }));
+    return new NounPhrase(
+        NounPhraseRecord({
+            noun: Series.isSeries(noun) || ArbitraryString.isArbitraryString(noun)
+                ? noun
+                : NounFactory(config)(noun)
+        }),
+        config
+    );
 };
 
 export {

@@ -25,12 +25,15 @@ class Adverb extends Constituent {
     }
 }
 
-const AdverbFactory = (adverb: Adverb|string): Adverb => {
+const AdverbFactory = (config: Object) => (adverb: Adverb|string): Adverb => {
     CheckType(adverb, ["Adverb", "string"]);
     if(Adverb.isAdverb(adverb)) {
         return adverb;
     }
-    return new Adverb(AdverbRecord({adverb}));
+    return new Adverb(
+        AdverbRecord({adverb}),
+        config
+    );
 };
 
 export {

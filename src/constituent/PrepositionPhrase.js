@@ -31,7 +31,7 @@ class PrepositionPhrase extends Constituent {
     }
 }
 
-const PrepositionPhraseFactory = (
+const PrepositionPhraseFactory = (config: Object) => (
     prepositionOrPhrase: PrepositionPhrase|Preposition|string,
     object: NounPhrase|Noun|string
 ): PrepositionPhrase => {
@@ -40,10 +40,13 @@ const PrepositionPhraseFactory = (
         return prepositionOrPhrase;
     }
 
-    return new PrepositionPhrase(PrepositionPhraseRecord({
-        preposition: PrepositionFactory(prepositionOrPhrase),
-        object: NounPhraseFactory(object)
-    }));
+    return new PrepositionPhrase(
+        PrepositionPhraseRecord({
+            preposition: PrepositionFactory(config)(prepositionOrPhrase),
+            object: NounPhraseFactory(config)(object)
+        }),
+        config
+    );
 };
 
 export {

@@ -1,7 +1,9 @@
+import {Map} from 'immutable';
 import {AdjectiveFactory} from './constituent/Adjective';
 import {AdjectivePhraseFactory} from './constituent/AdjectivePhrase';
 import {AdverbFactory} from './constituent/Adverb';
 import {AdverbPhraseFactory} from './constituent/AdverbPhrase';
+import {ArbitraryStringFactory} from './constituent/Constituent';
 import {ClauseFactory} from './constituent/Clause';
 import {ConjunctionFactory} from './constituent/Conjunction';
 import {DeterminerFactory} from './constituent/Determiner';
@@ -16,13 +18,17 @@ import {SentenceFactory} from './constituent/Sentence';
 import {VerbFactory} from './constituent/Verb';
 import {VerbPhraseFactory} from './constituent/VerbPhrase';
 
+const defaultConfig = {
+    numberRenderer: ii => `${ii}`
+};
 
-function Constituent(lexicon: Object) {
-    return {
+function Constituent(config: Object) {
+    return Map({
         Adjective: AdjectiveFactory,
         AdjectivePhrase: AdjectivePhraseFactory,
         Adverb: AdverbFactory,
         AdverbPhrase: AdverbPhraseFactory,
+        ArbitraryString: ArbitraryStringFactory,
         Clause: ClauseFactory,
         Conjunction: ConjunctionFactory,
         Determiner: DeterminerFactory,
@@ -34,7 +40,7 @@ function Constituent(lexicon: Object) {
         Pronoun: PronounFactory,
         Sentence: SentenceFactory,
         Series: SeriesFactory,
-        Verb: VerbFactory(lexicon),
+        Verb: VerbFactory,
         VerbPhrase: VerbPhraseFactory,
 
         // short hand
@@ -50,9 +56,11 @@ function Constituent(lexicon: Object) {
         P: PrepositionFactory,
         PP: PrepositionPhraseFactory,
         Pro: PronounFactory,
-        V: VerbFactory(lexicon),
+        V: VerbFactory,
         VP: VerbPhraseFactory
-    };
+    })
+        .map(ii => ii({...defaultConfig, ...config}))
+        .toObject();
 }
 
 export {
