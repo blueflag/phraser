@@ -64,13 +64,12 @@ class Clause extends Constituent {
             this.data.subject
         ], context, {hasFirst: false, hasLast: false});
 
-        flatSubject
-            .filter(ii => Noun.isNoun(ii))
-            .forEach((ii: Constituent|string) => {
-                context = context
-                    .set('number', ii.data.number)
-                    .set('person', ii.data.person);
-            });
+        var noun = this.getIn(['subject','noun']);
+        if(noun) {
+            context = context
+                .set('number', noun.get('number'))
+                .set('person', noun.get('person'));
+        }
 
         const flatPredicate: List<Constituent|string> = this._flattenChildren([
             this.data.verb,

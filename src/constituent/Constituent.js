@@ -190,8 +190,24 @@ class Constituent {
             .join("");
     }
 
-    get(key: string): any {
-        return this.data.get(key);
+    has(key: string): any {
+        return this.data.has(key);
+    }
+
+    get(key: string, notSetValue: *): any {
+        return this.data.get(key, notSetValue);
+    }
+
+    getIn(keyPath: string[], notSetValue: * = undefined): any {
+        var item = this;
+        for(var ii in keyPath) {
+            var key = keyPath[ii];
+            if(!item || !item.has(key)) {
+                return notSetValue;
+            }
+            item = item.get(key);
+        }
+        return item;
     }
 
     before(item: Array<Constituent|string>|List<Constituent|string>|Constituent|string): Constituent {
